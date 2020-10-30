@@ -1,4 +1,6 @@
 from Controller.Controller import Controller
+from DataStructures.HashTable import HashTable
+from Models.SalesOrder import SalesOrder
 
 """
 GARCIA, Gene Joseph V
@@ -86,6 +88,41 @@ list = SinglyLinkedList()
         print(id(current))
         print("Sales Id",current.data.getSalesOrderId())
         current = current.next
+        
+    hashT = HashTable(5)
+
+    s1 = SalesOrder()
+    s1.setSalesOrderId(1)
+    s1.setCustomerId(1)
+    s1.setDateFilled("Now")
+    s1.setProductId(1)
+    s1.setQuantity(5)
+    s1.setShippingId(1)
+
+    s2 = SalesOrder()
+    s2.setSalesOrderId(2)
+    s2.setCustomerId(2)
+    s2.setDateFilled("Now")
+    s2.setProductId(2)
+    s2.setQuantity(6)
+    s2.setShippingId(2)
+
+    s3 = SalesOrder()
+    s3.setSalesOrderId(3)
+    s3.setCustomerId(3)
+    s3.setDateFilled("Now")
+    s3.setProductId(3)
+    s3.setQuantity(7)
+    s3.setShippingId(3)
+
+    hashT.storeData(s3.getSalesOrderId(), s3)
+    hashT.storeData(s2.getSalesOrderId(), s2)
+    hashT.storeData(s1.getSalesOrderId(), s1)
+
+    print(hashT.table)
+    for index in hashT.table:
+        if index != None:
+            print(index.getSalesOrderId())
 """
 
 def main():
