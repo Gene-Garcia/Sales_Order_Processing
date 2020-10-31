@@ -1,6 +1,4 @@
 from Controller.Controller import Controller
-from DataStructures.QuickSort import QuickSort
-from Models.CustomerInformation import CustomerInformation
 
 """
 GARCIA, Gene Joseph V
