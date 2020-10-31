@@ -151,6 +151,29 @@ list = SinglyLinkedList()
 
 def main():
     print("--__main__")
+    c1 = CustomerInformation()
+    c1.setCustomerId(1)
+    c1.setName("ZRyan")
+    c2 = CustomerInformation()
+    c2.setCustomerId(2)
+    c2.setName("Ross")
+    c3 = CustomerInformation()
+    c3.setCustomerId(3)
+    c3.setName("Joee")
+    c4 = CustomerInformation()
+    c4.setCustomerId(4)
+    c4.setName("Pheebs")
+    c5 = CustomerInformation()
+    c5.setCustomerId(5)
+    c5.setName("Ash")
+
+    sort = QuickSort()
+    dataList = [c4, c5, c2, c1, c3]
+    for data in dataList:
+        print(data.getCustomerId(), data.getName())
+    sort.sort(dataList, 0, len(dataList) - 1)
+    for data in dataList:
+        print(data.getCustomerId(), data.getName())
 
 
 if __name__ == "__main__":
