@@ -19,3 +19,7 @@ class ShipmentDetails:
         self.__dateDelivered = date
     def getDateDelivered(self):
         return self.__dateDelivered
+
+    # for sort
+    def methodForSort(self):
+        return self.getDateShipped()
