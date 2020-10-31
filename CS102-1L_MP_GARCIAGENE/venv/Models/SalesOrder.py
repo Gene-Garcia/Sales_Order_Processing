@@ -37,3 +37,11 @@ class SalesOrder:
         self.__shippingId = id
     def getShippingId(self):
         return self.__shippingId
+
+    # static variable
+    highestId = 0
+
+    @staticmethod
+    def getId():
+        SalesOrder.highestId += 1
+        return SalesOrder.highestId

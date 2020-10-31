@@ -126,33 +126,6 @@ list = SinglyLinkedList()
             
     c1 = CustomerInformation()
     c1.setCustomerId(1)
-    c1.setName("Ryan")
-    c2 = CustomerInformation()
-    c2.setCustomerId(2)
-    c2.setName("Ross")
-    c3 = CustomerInformation()
-    c3.setCustomerId(3)
-    c3.setName("Joee")
-    c4 = CustomerInformation()
-    c4.setCustomerId(4)
-    c4.setName("Pheebs")
-    c5 = CustomerInformation()
-    c5.setCustomerId(5)
-    c5.setName("Ash")
-
-    sort = QuickSort()
-    dataList = [c1, c3, c2, c4, c5]
-    for data in dataList:
-        print(data.getCustomerId(), data.getName())
-    sort.quick_sort(dataList, 0, len(dataList)-1)
-    for data in dataList:
-        print(data.getCustomerId(), data.getName())
-"""
-
-def main():
-    print("--__main__")
-    c1 = CustomerInformation()
-    c1.setCustomerId(1)
     c1.setName("ZRyan")
     c2 = CustomerInformation()
     c2.setCustomerId(2)
@@ -174,6 +147,11 @@ def main():
     sort.sort(dataList, 0, len(dataList) - 1)
     for data in dataList:
         print(data.getCustomerId(), data.getName())
+"""
+
+def main():
+    print("--__main__")
+
 
 
 if __name__ == "__main__":

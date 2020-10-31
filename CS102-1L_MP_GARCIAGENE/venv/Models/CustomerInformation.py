@@ -29,3 +29,10 @@ class CustomerInformation:
     # for sort
     def methodForSort(self):
         return self.getName()
+
+    # static variable
+    highestId = 0
+    @staticmethod
+    def getId():
+        CustomerInformation.highestId += 1
+        return CustomerInformation.highestId

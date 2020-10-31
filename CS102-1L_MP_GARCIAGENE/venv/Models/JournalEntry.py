@@ -23,3 +23,11 @@ class JournalEntry:
     # for sort
     def methodForSort(self):
         return self.getDateCompleted()
+
+    # static variable
+    highestId = 0
+
+    @staticmethod
+    def getId():
+        JournalEntry.highestId += 1
+        return JournalEntry.highestId

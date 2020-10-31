@@ -19,3 +19,10 @@ class Product:
         self.__inStock = quantity
     def getStock(self):
         return self.__inStock
+
+    # static variable
+    highestId = 0
+    @staticmethod
+    def getId():
+        Product.highestId += 1
+        return Product.highestId

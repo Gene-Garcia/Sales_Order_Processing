@@ -23,3 +23,10 @@ class ShipmentDetails:
     # for sort
     def methodForSort(self):
         return self.getDateShipped()
+
+    # static variable
+    highestId = 0
+    @staticmethod
+    def getId():
+        ShipmentDetails.highestId += 1
+        return ShipmentDetails.highestId

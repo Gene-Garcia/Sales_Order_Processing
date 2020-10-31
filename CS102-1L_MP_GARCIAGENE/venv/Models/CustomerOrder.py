@@ -19,3 +19,10 @@ class CustomerOrder:
         self.__customerName = customerName
     def getCustomerName(self):
         return self.__customerName
+
+    # static variable
+    highestId = 0
+    @staticmethod
+    def getId():
+        CustomerOrder.highestId += 1
+        return CustomerOrder.highestId
