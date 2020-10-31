@@ -25,3 +25,7 @@ class CustomerInformation:
         self.__creditLimit = limit
     def getCreditLimit(self):
         return self.__creditLimit
+
+    # for sort
+    def methodForSort(self):
+        return self.getName()
