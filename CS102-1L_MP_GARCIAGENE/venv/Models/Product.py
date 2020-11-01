@@ -5,6 +5,7 @@ class Product:
         self.__productId = None # integer value
         self.__name = None # string name
         self.__inStock = None # integer number of product stock
+        self.__unitPrice = None # price of a single item
 
     # getters setters
     def setProductId(self, id):
@@ -21,6 +22,11 @@ class Product:
         self.__inStock = quantity
     def getStock(self):
         return self.__inStock
+
+    def setPrice(self, price):
+        self.__unitPrice = price
+    def getPrice(self):
+        return self.__unitPrice
 
     # for hash table
     def methodForHashTable(self):
