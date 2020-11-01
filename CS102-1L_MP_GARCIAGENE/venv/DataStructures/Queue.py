@@ -59,6 +59,6 @@ class Queue:
 
         print("\tQueue", end=" > ")
         while current != None:
-            print(f"{current.element}", end=" - ")
+            print(f"{current.data}", end=" - ")
             current = current.next
         print("\n")
