@@ -4,4 +4,6 @@ class ASCIIHelper:
         # using list comprehension
         # traverse each character in text
         data = [ord(character) for character in text]
-        print(data)
+        # add all ascii of each character
+        sumOfCharacters = sum(data)
+        return sumOfCharacters
