@@ -12,7 +12,7 @@ class HashTable:
         key = self.__getKey(data)
         if self.table[key] != None:
             # collision
-            key = self.__linearProbing(data, model)
+            key = self.__linearProbing(data)
 
         # store model to table
         self.table[key] = model
@@ -22,7 +22,7 @@ class HashTable:
         key = data % self.m
         return key
 
-    def __linearProbing(self, data, model):
+    def __linearProbing(self, data):
         # h(k) = k mod m + 1
         # h(k) = k mod m + 2
         # ...
@@ -35,4 +35,25 @@ class HashTable:
             probeCtr += 1
 
     def findData(self, data):
-        pass
+        key = self.__getKey(data)
+
+        # key not in table
+        if self.table[key] == None:
+            return False
+
+        # check value
+        if self.table[key].methodForHashTable() == data:
+            return self.table[key] # data found
+
+        # linear probe the data
+        # the key might be on the succeeding indexes
+        for i in range(self.m):
+            key = self.__linearProbing(data)
+
+            # check value
+            if self.table[key] != None:
+                if self.table[key].methodForHashTable() == data:
+                    return self.table[key]  # data found
+
+        # not found
+        return False
