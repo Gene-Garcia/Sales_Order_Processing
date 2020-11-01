@@ -1,3 +1,5 @@
+from Helpers.ASCIIHelper import ASCIIHelper
+
 class Product:
     def __init__(self):
         self.__productId = None # integer value
@@ -19,6 +21,10 @@ class Product:
         self.__inStock = quantity
     def getStock(self):
         return self.__inStock
+
+    # for hash table
+    def methodForHashTable(self):
+        return ASCIIHelper.toASCII(self.getName())
 
     # static variable
     highestId = 0

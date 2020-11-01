@@ -1,3 +1,5 @@
+from Helpers.ASCIIHelper import ASCIIHelper
+
 class CustomerInformation:
     def __init__(self):
         self.__customerId = None # int value
@@ -29,6 +31,10 @@ class CustomerInformation:
     # for sort
     def methodForSort(self):
         return self.getName()
+
+    # for hash table
+    def methodForHashTable(self):
+        return ASCIIHelper.toASCII(self.getName())
 
     # static variable
     highestId = 0
