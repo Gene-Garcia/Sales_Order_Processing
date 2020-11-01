@@ -30,6 +30,11 @@ class HashTable:
         probeCtr = 1
         while True:
             key = self.__getKey(data) + probeCtr
+
+            if key >= self.m:
+                # out of bounds
+                # go back to 0
+                key = key - self.m
             if self.table[key] == None:
                 return key
             probeCtr += 1
