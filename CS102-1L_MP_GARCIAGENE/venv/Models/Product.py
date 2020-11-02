@@ -30,7 +30,7 @@ class Product:
 
     # for hash table
     def methodForHashTable(self):
-        return ASCIIHelper.toASCII(self.getName())
+        return self.getProductId()
 
     # static variable
     highestId = 0
