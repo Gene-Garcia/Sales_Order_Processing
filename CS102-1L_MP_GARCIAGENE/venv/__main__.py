@@ -1,6 +1,5 @@
 from Controller.Controller import Controller
-from Helpers.DataHelper import DataHelper
-from Helpers.ASCIIHelper import ASCIIHelper
+
 """
 GARCIA, Gene Joseph V
 CS102-1L - Final Machine Problem
@@ -192,10 +191,7 @@ list = SinglyLinkedList()
         print(found.getName())
     else:
         print("not found")
-"""
-
-def main():
-    print("--__main__")
+        
     datas = DataHelper()
     datas.populate()
 
@@ -223,6 +219,11 @@ def main():
 
     print(datas.salesJournal.head.data.getJournalId())
     datas.salesJournal.traverseNode()
+"""
+
+def main():
+    print("--__main__")
+    Controller().showMainMenu()
 
 if __name__ == "__main__":
     main()
