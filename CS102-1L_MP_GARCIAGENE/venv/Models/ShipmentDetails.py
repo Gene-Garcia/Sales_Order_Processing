@@ -20,6 +20,11 @@ class ShipmentDetails:
     def getDateDelivered(self):
         return self.__dateDelivered
 
+    def displaySummary(self):
+        print("\tShipping Id", self.__shippingId)
+        print("\tDate Shipped", self.__dateShipped)
+        print("\tDate Delivered", self.__dateDelivered)
+
     # for sort
     def methodForSort(self):
         return self.getDateShipped()
