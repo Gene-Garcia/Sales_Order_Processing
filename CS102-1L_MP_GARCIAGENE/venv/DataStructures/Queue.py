@@ -46,12 +46,12 @@ class Queue:
 
     def front(self):
         if self.front != None:
-            return self.front.data
+            return self.front
         return None
 
     def rear(self):
         if self.rear != None:
-            return self.rear.data
+            return self.rear
         return None
 
     def printQueue(self):
