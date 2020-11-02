@@ -27,31 +27,22 @@ class SinglyLinkedList:
         # find node
         current = self.head
 
-        # check if head is equals to data
-        if current.data != data:
-            while current != None:
-                if current.next != None:
-                    if current.next.data == data:
-                        break
-                current = current.next
+        if current != None:
+            if current.data.methodForDelete() == data.data.methodForDelete():
+                # first node
+                # its okay even if current.next is none
+                self.head = current.next
+                return # does not run code below
+
+        while current != None:
+            if current.data.methodForDelete() == data.data.methodForDelete():
+                break
+            previous = current
+            current = current.next
 
         if current != None:
-            # node found
-            if current.data == self.head.data:
-                # first node
-                self.head = current.next
-
-            elif current.next != None:
-                # middle node
-                current.next = current.next.next
-
-            else:
-                # last node
-                current.next = None
-
-        else:
-            # node not found or list empty
-            pass
+            # current is the node to be deleted
+            previous.next = current.next
 
     def traverseNode(self):
         current = self.head
