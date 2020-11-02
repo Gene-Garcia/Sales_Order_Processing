@@ -92,7 +92,8 @@ class Controller:
 
             # temporary list of sales order ids
             salesOrderIdList = []
-            # display shipping log
+
+            # display shipping log and its sales order
             for log in shippingLogList:
                 log = log.data
                 # find sales order using shippingId
@@ -104,8 +105,19 @@ class Controller:
                     current = current.next
 
                 if current != None:
+                    # sales order
                     current.data.displaySummary()
+
+                    # shipping details
                     log.displaySummary()
+
+                    # display customer
+                    customerModel = self.data.custInfoHashTable.findData(current.data.getCustomerId())
+                    print("\tCustomer name", customerModel.getName())
+
+                    # display product
+                    productModel = self.data.stockRecordsHashTable.findData(current.data.getProductId())
+                    print("\tProduct Name", productModel.getName())
 
                 print()
 
@@ -119,8 +131,17 @@ class Controller:
                     break
                 salesOrder = salesOrder.next
 
-            print("\tSelected Sales Order")
+            print("\t\tSelected Sales Order")
             salesOrder.data.displaySummary()
+
+            # display customer
+            customerModel = self.data.custInfoHashTable.findData(salesOrder.data.getCustomerId())
+            print("\tCustomer name", customerModel.getName())
+
+            # display product
+            productModel = self.data.stockRecordsHashTable.findData(salesOrder.data.getProductId())
+            print("\tProduct Name", productModel.getName())
+
             # remove the sales order from the temporaryPendingFile
             self.data.temporaryPendingFile.deleteNode(salesOrder)
 
@@ -128,12 +149,14 @@ class Controller:
             journalEntry = JournalEntry()
             journalEntry.setDateFiled(date.today())
             journalEntry.setJournalId(JournalEntry.getId())
-            journalEntry.setSalesOrder(salesOrder)
+            journalEntry.setSalesOrder(salesOrder.data)
 
             # record journal entry
             self.data.salesJournal.insertNode(journalEntry)
 
             # re-compute customers credit payable
+
+            print("\n\tCustomer billed with sales order #", salesOrder.data.getSalesOrderId())
 
         else:
             print("\tThere are currently no sales orders to be billed")
@@ -156,10 +179,18 @@ class Controller:
             # reference shipping details to sales order
             toShip.setShippingId(shippingDetails.getShippingId())
 
-            print("\n\tSales Order Summary")
+            print("\n\t\tSales Order Summary")
             toShip.displaySummary()
 
-            print("\n\tShipping Log details")
+            # display customer
+            customerModel = self.data.custInfoHashTable.findData(toShip.getCustomerId())
+            print("\tCustomer name", customerModel.getName())
+
+            # display product
+            productModel = self.data.stockRecordsHashTable.findData(toShip.getProductId())
+            print("\tProduct Name", productModel.getName())
+
+            print("\n\t\tShipping Log details")
             shippingDetails.displaySummary()
 
             # entry to shipping log
@@ -182,14 +213,8 @@ class Controller:
         if salesBackOrder != None:
             salesBackOrder = salesBackOrder.data
 
-            # find customer using id
-            current = self.data.customerInformation.head
-            while current != None:
-                if current.data.getCustomerId() == salesBackOrder.getCustomerId():
-                    break
-                current = current.next
-            # find in hash table, to abide by the proposal
-            customerModel = self.data.custInfoHashTable.findData(ASCIIHelper.toASCII(current.data.getName()))
+            # find in hash table
+            customerModel = self.data.custInfoHashTable.findData(salesBackOrder.getCustomerId())
 
             if customerModel != None:
                 """"# reconsile and check amount payables and credit limit"""
@@ -227,7 +252,7 @@ class Controller:
         if toProcess:
             toProcess = toProcess.data
             # check if customer order's customer
-            customerModel = self.data.custInfoHashTable.findData(ASCIIHelper.toASCII(toProcess.getCustomerName()))
+            customerModel = self.data.custInfoHashTable.findData(toProcess.getCustomerId())
 
             if customerModel != None:
                 """"# reconsile and check amount payables and credit limit"""
@@ -270,7 +295,7 @@ class Controller:
                             print("\n\tSales Order Queued in Back Order File Due to insufficient quantity\n")
 
             else:
-                print("\tCustomer not found with name", toProcess.getCustomerName())
+                print("\tCustomer not found with id", toProcess.getCustomerName())
 
         else:
             print("\tThere are currently no customer orders in queue")
@@ -279,10 +304,18 @@ class Controller:
         customerOrder = CustomerOrder()
 
         productIdList = []
+        customerIdList = []
 
-        # customer name
-        customerName = InputHelper.stringInput("Customer name [Observe proper name capitalization]")
-        customerOrder.setCustomerName(customerName)
+        # display customer
+        current = self.data.customerInformation.head
+        while current != None:
+            customerIdList.append(current.data.getCustomerId())
+            print(f"\tId {current.data.getCustomerId()} {current.data.getName()}\n\tCurrent Payables {current.data.getAmountPayable()}\n")
+            current = current.next
+
+        # select customer
+        customerId = InputHelper.integerInputWithChoices("Select a customer Id", customerIdList)
+        customerOrder.setCustomerId(customerId)
 
         # display products
         print("\n\tProducts")

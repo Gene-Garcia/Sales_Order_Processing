@@ -34,7 +34,7 @@ class CustomerInformation:
 
     # for hash table
     def methodForHashTable(self):
-        return ASCIIHelper.toASCII(self.getName())
+        return self.getCustomerId()
 
     # static variable
     highestId = 0

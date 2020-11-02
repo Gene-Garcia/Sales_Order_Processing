@@ -107,17 +107,17 @@ class DataHelper:
     def __populateCustomerOrder(self):
         # customer orders
         cusOrder1 = CustomerOrder()
-        cusOrder1.setCustomerName("Penny Hofstadter")
+        cusOrder1.setCustomerName(2)
         cusOrder1.setItems([3, 1])
         cusOrder1.setItemQuantities([20, 10])
 
         cusOrder2 = CustomerOrder()
-        cusOrder2.setCustomerName("Joey Tribbiani")
+        cusOrder2.setCustomerName(3)
         cusOrder2.setItems([2, 3])
         cusOrder2.setItemQuantities([5, 15])
 
         cusOrder3 = CustomerOrder()
-        cusOrder3.setCustomerName("Sheldon Cooper")
+        cusOrder3.setCustomerName(1)
         cusOrder3.setItems([3])
         cusOrder3.setItemQuantities([30])
 
@@ -273,8 +273,8 @@ class DataHelper:
     def populate(self):
         self.__populateStockRecords()
         self.__populateCustomerInformation()
-        self.__populateCustomerOrder()
-        self.__populateOpenOrderFile()
-        self.__populateBackOrderFile()
-        self.__populateSOPendingFile()
-        self.__populateSalesJournal()
+        #self.__populateCustomerOrder()
+        #self.__populateOpenOrderFile()
+        #self.__populateBackOrderFile()
+        #self.__populateSOPendingFile()
+        #self.__populateSalesJournal()
