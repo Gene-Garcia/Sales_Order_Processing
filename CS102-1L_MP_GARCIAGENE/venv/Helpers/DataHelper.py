@@ -105,17 +105,17 @@ class DataHelper:
         # customer orders
         cusOrder1 = CustomerOrder()
         cusOrder1.setCustomerName("Penny Hofstadter")
-        cusOrder1.setItems(["small chair", "ergonomic chair"])
+        cusOrder1.setItems([3, 1])
         cusOrder1.setItemQuantities([20, 10])
 
         cusOrder2 = CustomerOrder()
         cusOrder2.setCustomerName("Joey Tribbiani")
-        cusOrder2.setItems(["basic chair", "small chair"])
+        cusOrder2.setItems([2, 3])
         cusOrder2.setItemQuantities([5, 15])
 
         cusOrder3 = CustomerOrder()
         cusOrder3.setCustomerName("Sheldon Cooper")
-        cusOrder3.setItems(["small chair"])
+        cusOrder3.setItems([3])
         cusOrder3.setItemQuantities([30])
 
         self.customerOrder.enqueue(cusOrder1)
