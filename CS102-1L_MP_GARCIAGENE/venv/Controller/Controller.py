@@ -20,7 +20,8 @@ class Controller:
         self.showMainMenu()
 
     def showMainMenu(self):
-        print("""
+        while True:
+            print("""
     1 Take customer's order
     2 Create sales order
     3 Process back orders
@@ -28,17 +29,18 @@ class Controller:
     5 Bill customer # also insert record in Sales Journal
     6 Display records
     0 Terminate program""")
-        menuSelection = InputHelper.integerInputWithChoices("Select from menu", [1, 2, 3, 4, 5, 6, 0])
-        print()
+            menuSelection = InputHelper.integerInputWithChoices("Select from menu", [1, 2, 3, 4, 5, 6, 0])
+            print()
 
-        if menuSelection == 1:
-            self.takeCustomerOrder()
+            if menuSelection == 1:
+                self.takeCustomerOrder()
 
-        elif menuSelection == 2:
-            self.createSalesOrder()
+            elif menuSelection == 2:
+                self.createSalesOrder()
 
-        elif menuSelection == 0:
-            print("\n\tTerminating program...")
+            elif menuSelection == 0:
+                print("\n\tTerminating program...")
+                break
 
     def showDisplayMenu(self):
         """
@@ -49,6 +51,7 @@ class Controller:
         pass
 
     def createSalesOrder(self):
+        print("\tPROCESSING CUSTOMER ORDER TO SALES ORDERS\n")
         toProcess = self.data.customerOrder.dequeue()
 
         if toProcess:
@@ -57,8 +60,6 @@ class Controller:
             customerModel = self.data.custInfoHashTable.findData(ASCIIHelper.toASCII(toProcess.getCustomerName()))
 
             if customerModel != None:
-                print("\tCustomer Found")
-
                 # reconsile and check amount payables and credit limit
 
                 # loop each item
@@ -82,11 +83,9 @@ class Controller:
                         # no shipping id yet
 
                         # display sales order
-                        print("Sales Order for", salesOrder.getCustomerId(), customerModel.getName())
-                        print("Id", salesOrder.getSalesOrderId())
-                        print("Product Id", salesOrder.getProductId(), "Name", productModel.getName())
-                        print("Quantity", salesOrder.getQuantity())
-                        print("Date filled", salesOrder.getDateFilled())
+                        print("\tSales Order for", salesOrder.getCustomerId(), customerModel.getName())
+                        salesOrder.displaySummary()
+                        print("\tTotal cost in PHP", productModel.getPrice() * toProcess.getItemQuantities()[orderIndex])
 
                         # check if stock inventory is enough for the order
                         if toProcess.getItemQuantities()[orderIndex] <= productModel.getStock():
@@ -94,17 +93,17 @@ class Controller:
                             productModel.setStock( productModel.getStock() - toProcess.getItemQuantities()[orderIndex] )
                             # file in open order file
                             self.data.openOrderFile.enqueue(salesOrder)
-                            print("\t\nSales Order Queued in Open Order File Successfully")
+                            print("\n\tSales Order Queued in Open Order File Successfully")
                         else:
                             # file in back order file
                             self.data.backOrderFile.enqueue(salesOrder)
-                            print("\t\nSales Order Queued in Back Order File Due to insufficient quantity")
+                            print("\n\tSales Order Queued in Back Order File Due to insufficient quantity\n")
 
             else:
-                print("\tCustomer not found.")
+                print("\tCustomer not found with name", toProcess.getCustomerName())
 
         else:
-            print("\n\tEmpty Queue of Customers orders")
+            print("\tEmpty Queue of Customers orders")
 
     def takeCustomerOrder(self):
         customerOrder = CustomerOrder()

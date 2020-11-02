@@ -39,12 +39,12 @@ class SalesOrder:
         return self.__shippingId
 
     def displaySummary(self):
-        print("Sales Order Id", self.__salesOrderId)
-        print("Customer Id", self.__customerId)
-        print("Product Id", self.__productId)
-        print("Quantity", self.__quantity)
-        print("Date Filled", self.__dateFilled)
-        print("Shipping Id", self.__shippingId)
+        print("\tSales Order Id", self.__salesOrderId)
+        print("\tCustomer Id", self.__customerId)
+        print("\tProduct Id", self.__productId)
+        print("\tQuantity", self.__quantity)
+        print("\tDate Filled", self.__dateFilled)
+        print("\tShipping Id", self.__shippingId)
 
     # static variable
     highestId = 0
