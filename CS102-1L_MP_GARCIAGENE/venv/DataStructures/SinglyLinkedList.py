@@ -59,3 +59,11 @@ class SinglyLinkedList:
         while current != None:
             print(current.data, end="->")
             current = current.next
+
+    def convertToList(self):
+        convertedList = []
+
+        current = self.head
+        while current != None:
+            convertedList.append(current)
+            current = current.next
