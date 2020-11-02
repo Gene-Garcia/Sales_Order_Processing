@@ -27,6 +27,9 @@ class DataHelper:
         self.salesJournal = SinglyLinkedList()
         self.shippingLog = SinglyLinkedList()
 
+        # additional for bill customer
+        self.temporaryPendingFile = SinglyLinkedList()
+
         # Queue
         self.customerOrder = Queue() # informal
         self.openOrderFile = Queue() # to ship
@@ -219,6 +222,9 @@ class DataHelper:
         self.shippingLog.insertNode(s1)
         self.salesOrderPendingFile.enqueue(so2)
         self.shippingLog.insertNode(s2)
+
+        self.temporaryPendingFile.insertNode(so1)
+        self.temporaryPendingFile.insertNode(so2)
 
     def __populateSalesJournal(self):
         today = date.today()
