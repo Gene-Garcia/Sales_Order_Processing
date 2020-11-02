@@ -223,7 +223,7 @@ list = SinglyLinkedList()
 
 def main():
     print("--__main__")
-    Controller().showMainMenu()
+    controller = Controller()
 
 if __name__ == "__main__":
     main()

@@ -5,6 +5,7 @@ from Helpers.ASCIIHelper import ASCIIHelper
 from Models.CustomerOrder import CustomerOrder
 from Models.SalesOrder import SalesOrder
 from Models.CustomerInformation import  CustomerInformation
+from Models.ShipmentDetails import ShipmentDetails
 
 from datetime import date
 
@@ -20,7 +21,8 @@ class Controller:
         self.showMainMenu()
 
     def showMainMenu(self):
-        while True:
+        menuSelection = None
+        while menuSelection != 0:
             print("""
     1 Take customer's order
     2 Create sales order
@@ -41,6 +43,9 @@ class Controller:
             elif menuSelection == 3:
                 self.processBackOrders()
 
+            elif menuSelection == 4:
+                self.shipOrders()
+
             elif menuSelection == 0:
                 print("\n\tTerminating program...")
                 break
@@ -52,6 +57,37 @@ class Controller:
         3 Shipping log
         """
         pass
+
+    def shipOrders(self):
+        print("\tSHIP ORDERS\n")
+
+        toShip = self.data.openOrderFile.dequeue()
+        toShip = toShip.data
+
+        print("\tCreating shipment records for sales order #", toShip.getSalesOrderId())
+
+        # create shipping record
+        shippingDetails = ShipmentDetails()
+        shippingDetails.setShippingId(ShipmentDetails.getId())
+        shippingDetails.setDateShipped(date.today())
+        shippingDetails.setDateDelivered(None)
+
+        # reference shipping details to sales order
+        toShip.setShippingId(shippingDetails.getShippingId())
+
+        print("\n\tSales Order Summary")
+        toShip.displaySummary()
+
+        print("\n\tShipping Log details")
+        shippingDetails.displaySummary()
+
+        # entry to shipping log
+        self.data.shippingLog.insertNode(shippingDetails)
+        # entry to pending file
+        self.data.salesOrderPendingFile.enqueue(toShip)
+
+        # add date computation
+        print("\n\tSales order filed for shipment and will be delivered to the customer after exactly 7 days")
 
     def processBackOrders(self):
         print("\tPROCESSING BACK ORDERS\n")
