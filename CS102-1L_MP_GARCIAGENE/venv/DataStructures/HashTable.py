@@ -44,7 +44,7 @@ class HashTable:
 
         # key not in table
         if self.table[key] == None:
-            return False
+            return None
 
         # check value
         if self.table[key].methodForHashTable() == data:
@@ -61,4 +61,4 @@ class HashTable:
                     return self.table[key]  # data found
 
         # not found
-        return False
+        return None
