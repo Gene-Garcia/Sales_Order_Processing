@@ -46,9 +46,12 @@ class SalesOrder:
         print("\tDate Filled", self.__dateFilled)
         print("\tShipping Id", self.__shippingId)
 
+    # for delete
+    def methodForDelete(self):
+        return self.__salesOrderId
+
     # static variable
     highestId = 0
-
     @staticmethod
     def getId():
         SalesOrder.highestId += 1
