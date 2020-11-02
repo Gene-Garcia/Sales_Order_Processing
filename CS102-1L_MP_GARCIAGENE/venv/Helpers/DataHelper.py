@@ -169,7 +169,7 @@ class DataHelper:
         so2.setDateFilled(today)
         so2.setCustomerId(2)
         so2.setProductId(1)
-        so2.setQuantity(50)
+        so2.setQuantity(5)
         so2.setShippingId(None)
 
         so3 = SalesOrder()

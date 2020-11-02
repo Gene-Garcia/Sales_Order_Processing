@@ -38,6 +38,9 @@ class Controller:
             elif menuSelection == 2:
                 self.createSalesOrder()
 
+            elif menuSelection == 3:
+                self.processBackOrders()
+
             elif menuSelection == 0:
                 print("\n\tTerminating program...")
                 break
@@ -50,6 +53,52 @@ class Controller:
         """
         pass
 
+    def processBackOrders(self):
+        print("\tPROCESSING BACK ORDERS\n")
+        # already a sales order
+        salesBackOrder = self.data.backOrderFile.dequeue()
+
+        if salesBackOrder != None:
+            salesBackOrder = salesBackOrder.data
+
+            # find customer using id
+            current = self.data.customerInformation.head
+            while current != None:
+                if current.data.getCustomerId() == salesBackOrder.getCustomerId():
+                    break
+                current = current.next
+            # find in hash table, to abide by the proposal
+            customerModel = self.data.custInfoHashTable.findData(ASCIIHelper.toASCII(current.data.getName()))
+
+            if customerModel != None:
+                """"# reconsile and check amount payables and credit limit"""
+                # # # # what if a product is already stocked but, the sales order is at the back of the queue
+
+                # check inventory
+                # if sufficient enqueue to open order
+                # otherwise enqueue again to back order file
+
+                productModel = self.data.stockRecordsHashTable.findData(salesBackOrder.getProductId())
+                if productModel != None:
+                    print("\tSales Order for", salesBackOrder.getCustomerId(), customerModel.getName())
+                    salesBackOrder.displaySummary()
+                    print("\tTotal cost in PHP", productModel.getPrice() * salesBackOrder.getQuantity())
+
+                    # check if stock inventory is enough for the order
+                    if salesBackOrder.getQuantity() <= productModel.getStock():
+                        # reduce stock
+                        productModel.setStock(productModel.getStock() - salesBackOrder.getQuantity())
+                        # file in open order file
+                        self.data.openOrderFile.enqueue(salesBackOrder)
+                        print("\n\tSales Order Queued in Open Order File Successfully")
+                    else:
+                        # file in back order file
+                        self.data.backOrderFile.enqueue(salesBackOrder)
+                        print("\n\tSales Order Queued in Back Order File Again Due to insufficient quantity")
+
+        else:
+            print("\tThere are currently no back orders in queue")
+
     def createSalesOrder(self):
         print("\tPROCESSING CUSTOMER ORDER TO SALES ORDERS\n")
         toProcess = self.data.customerOrder.dequeue()
@@ -60,7 +109,7 @@ class Controller:
             customerModel = self.data.custInfoHashTable.findData(ASCIIHelper.toASCII(toProcess.getCustomerName()))
 
             if customerModel != None:
-                # reconsile and check amount payables and credit limit
+                """"# reconsile and check amount payables and credit limit"""
 
                 # loop each item
                 # check product records if existing
@@ -103,7 +152,7 @@ class Controller:
                 print("\tCustomer not found with name", toProcess.getCustomerName())
 
         else:
-            print("\tEmpty Queue of Customers orders")
+            print("\tThere are currently no customer orders in queue")
 
     def takeCustomerOrder(self):
         customerOrder = CustomerOrder()
