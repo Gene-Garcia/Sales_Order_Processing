@@ -67,3 +67,5 @@ class SinglyLinkedList:
         while current != None:
             convertedList.append(current)
             current = current.next
+
+        return convertedList
