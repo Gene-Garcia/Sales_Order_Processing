@@ -5,7 +5,7 @@ class InputHelper:
     def stringInput(message):
         userInput = None
         while True:
-            userInput = input("\n\t" + message + " >>").strip()
+            userInput = input("\t" + message + " >>").strip()
             if (userInput != ""):
                 break
             print("\tInput empty")
@@ -16,11 +16,40 @@ class InputHelper:
         userInput = None
         while True:
             try:
-                userInput = int(input("\n\t" + message + " >>").strip())
+                userInput = int(input("\t" + message + " >>").strip())
                 break
             except:
                 print("\tInvalid input, integers only.")
-                continue
+        return userInput
+
+    @staticmethod
+    def integerInput(message, min):
+        userInput = None
+        while True:
+            try:
+                userInput = int(input("\t" + message + " >>").strip())
+
+                if userInput >= min:
+                    break
+                else:
+                    print("\tMinimum value is", min)
+            except:
+                print("\tInvalid input, integers only.")
+        return userInput
+
+    @staticmethod
+    def integerInputWithChoices(message, choices = []):
+        userInput = None
+        while True:
+            try:
+                userInput = int(input("\t" + message + " >>").strip())
+
+                if userInput in choices:
+                    break
+                else:
+                    print("\tInput not from choices.")
+            except:
+                print("\tInvalid input, integers only.")
         return userInput
 
     @staticmethod
@@ -28,7 +57,7 @@ class InputHelper:
         userInput = None
         while True:
             try:
-                userInput = float(input("\n\t" + message + " >>").strip())
+                userInput = float(input("\t" + message + " >>").strip())
                 break
             except:
                 print("\tInvalid input, decimals only.")
