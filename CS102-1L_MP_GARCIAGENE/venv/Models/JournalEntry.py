@@ -2,7 +2,7 @@ class JournalEntry:
     def __init__(self):
         self.__journalId = None # integer value
         self.__salesOrder = None # sales order model object
-        self.__dateCompleted = None # date value
+        self.__dateFiled = None # date value
 
     # getters setters
     def setJournalId(self, id):
@@ -15,10 +15,10 @@ class JournalEntry:
     def getSalesOrder(self):
         return self.__salesOrder
 
-    def setDateCompleted(self, date):
-        self.__dateCompleted = date
-    def getDateCompleted(self):
-        return self.__dateCompleted
+    def setDateFiled(self, date):
+        self.__dateFiled = date
+    def getDateFiled(self):
+        return self.__dateFiled
 
     # for sort
     def methodForSort(self):
