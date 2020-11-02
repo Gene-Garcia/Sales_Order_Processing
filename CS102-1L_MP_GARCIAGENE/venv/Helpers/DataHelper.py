@@ -133,7 +133,7 @@ class DataHelper:
         so1.setDateFilled(today)
         so1.setCustomerId(2)
         so1.setProductId(1)
-        so1.setQuantity(10)
+        so1.setQuantity(100)
         so1.setShippingId(None)
 
         so2 = SalesOrder()
@@ -141,7 +141,7 @@ class DataHelper:
         so2.setDateFilled(today)
         so2.setCustomerId(1)
         so2.setProductId(3)
-        so2.setQuantity(10)
+        so2.setQuantity(5)
         so2.setShippingId(None)
 
         so3 = SalesOrder()
@@ -246,7 +246,7 @@ class DataHelper:
         j1 = JournalEntry()
         j1.setJournalId(JournalEntry.getId())
         j1.setSalesOrder(so1)
-        j1.setDateCompleted(s1.getDateShipped())
+        j1.setDateFiled(s1.getDateShipped())
 
         so2 = SalesOrder()
         so2.setSalesOrderId(SalesOrder.getId())
@@ -265,7 +265,7 @@ class DataHelper:
         j2 = JournalEntry()
         j2.setJournalId(JournalEntry.getId())
         j2.setSalesOrder(so2)
-        j2.setDateCompleted(s2.getDateShipped())
+        j2.setDateFiled(s2.getDateShipped())
 
         self.salesJournal.insertNode(j1)
         self.salesJournal.insertNode(j2)

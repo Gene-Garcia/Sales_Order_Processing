@@ -2,10 +2,13 @@ from Helpers.InputHelper import InputHelper
 from Helpers.DataHelper import DataHelper
 from Helpers.ASCIIHelper import ASCIIHelper
 
+from DataStructures.QuickSort import QuickSort
+
 from Models.CustomerOrder import CustomerOrder
 from Models.SalesOrder import SalesOrder
 from Models.CustomerInformation import  CustomerInformation
 from Models.ShipmentDetails import ShipmentDetails
+from Models.JournalEntry import JournalEntry
 
 from datetime import date
 
@@ -30,8 +33,9 @@ class Controller:
     4 Ship orders
     5 Bill customer # also insert record in Sales Journal
     6 Display records
+    7 Other Menu
     0 Terminate program""")
-            menuSelection = InputHelper.integerInputWithChoices("Select from menu", [1, 2, 3, 4, 5, 6, 0])
+            menuSelection = InputHelper.integerInputWithChoices("Select from menu", [1, 2, 3, 4, 5, 6, 7, 0])
             print()
 
             if menuSelection == 1:
@@ -46,6 +50,15 @@ class Controller:
             elif menuSelection == 4:
                 self.shipOrders()
 
+            elif menuSelection == 5:
+                self.billCustomer()
+
+            elif menuSelection == 6:
+                self.showDisplayMenu()
+
+            elif menuSelection == 7:
+                self.showOtherMenu()
+
             elif menuSelection == 0:
                 print("\n\tTerminating program...")
                 break
@@ -55,39 +68,111 @@ class Controller:
         1 Customer information
         2 Sales journal records
         3 Shipping log
+        4 SO Pending files
         """
         pass
+
+    def showOtherMenu(self):
+        """
+        1 Add Customer
+        2 Add Product
+        3 Add Product Stock
+        """
+        pass
+
+    def billCustomer(self):
+        print("\tBILL CUSTOMERS\n")
+        # includes re-computing customer credit/amount payable
+
+        if self.data.temporaryPendingFile.head != None:
+
+            shippingLogList = self.data.shippingLog.convertToList()
+            quicksort = QuickSort()
+            quicksort.sort(shippingLogList, 0, len(shippingLogList) - 1)
+
+            # temporary list of sales order ids
+            salesOrderIdList = []
+            # display shipping log
+            for log in shippingLogList:
+                log = log.data
+                # find sales order using shippingId
+                current = self.data.temporaryPendingFile.head
+                while current != None:
+                    if current.data.getShippingId() == log.getShippingId():
+                        salesOrderIdList.append(current.data.getSalesOrderId())
+                        break
+                    current = current.next
+
+                if current != None:
+                    current.data.displaySummary()
+                    log.displaySummary()
+
+                print()
+
+            # select sales order
+            selectedSalesOrderId = InputHelper.integerInputWithChoices("Select from sales order Id", salesOrderIdList)
+
+            # find the sales order using the selected id
+            salesOrder = self.data.temporaryPendingFile.head
+            while salesOrder != None:
+                if salesOrder.data.getSalesOrderId() == selectedSalesOrderId:
+                    break
+                salesOrder = salesOrder.next
+
+            print("\tSelected Sales Order")
+            salesOrder.data.displaySummary()
+            # remove the sales order from the temporaryPendingFile
+            self.data.temporaryPendingFile.deleteNode(salesOrder)
+
+            # create journal entry
+            journalEntry = JournalEntry()
+            journalEntry.setDateFiled(date.today())
+            journalEntry.setJournalId(JournalEntry.getId())
+            journalEntry.setSalesOrder(salesOrder)
+
+            # record journal entry
+            self.data.salesJournal.insertNode(journalEntry)
+
+            # re-compute customers credit payable
+
+        else:
+            print("\tThere are currently no sales orders to be billed")
 
     def shipOrders(self):
         print("\tSHIP ORDERS\n")
 
         toShip = self.data.openOrderFile.dequeue()
-        toShip = toShip.data
+        if toShip != None:
+            toShip = toShip.data
 
-        print("\tCreating shipment records for sales order #", toShip.getSalesOrderId())
+            print("\tCreating shipment records for sales order #", toShip.getSalesOrderId())
 
-        # create shipping record
-        shippingDetails = ShipmentDetails()
-        shippingDetails.setShippingId(ShipmentDetails.getId())
-        shippingDetails.setDateShipped(date.today())
-        shippingDetails.setDateDelivered(None)
+            # create shipping record
+            shippingDetails = ShipmentDetails()
+            shippingDetails.setShippingId(ShipmentDetails.getId())
+            shippingDetails.setDateShipped(date.today())
+            shippingDetails.setDateDelivered(None)
 
-        # reference shipping details to sales order
-        toShip.setShippingId(shippingDetails.getShippingId())
+            # reference shipping details to sales order
+            toShip.setShippingId(shippingDetails.getShippingId())
 
-        print("\n\tSales Order Summary")
-        toShip.displaySummary()
+            print("\n\tSales Order Summary")
+            toShip.displaySummary()
 
-        print("\n\tShipping Log details")
-        shippingDetails.displaySummary()
+            print("\n\tShipping Log details")
+            shippingDetails.displaySummary()
 
-        # entry to shipping log
-        self.data.shippingLog.insertNode(shippingDetails)
-        # entry to pending file
-        self.data.salesOrderPendingFile.enqueue(toShip)
+            # entry to shipping log
+            self.data.shippingLog.insertNode(shippingDetails)
+            # entry to pending file
+            self.data.salesOrderPendingFile.enqueue(toShip)
+            self.data.temporaryPendingFile.insertNode(toShip)
 
-        # add date computation
-        print("\n\tSales order filed for shipment and will be delivered to the customer after exactly 7 days")
+            # add date computation
+            print("\n\tSales order filed for shipment and will be delivered to the customer after exactly 7 days")
+
+        else:
+            print("\n\tThere are currently no orders for shipping")
 
     def processBackOrders(self):
         print("\tPROCESSING BACK ORDERS\n")

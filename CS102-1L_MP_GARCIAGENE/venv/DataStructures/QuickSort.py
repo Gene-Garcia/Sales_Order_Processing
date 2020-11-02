@@ -13,14 +13,14 @@ class QuickSort:
             # as long as the data are greater than or = to the pivot
             # it stays at the right side of the pivot
             # however not yet sorted
-            while low <= high and listModel[high].methodForSort() >= pivot.methodForSort():
+            while low <= high and listModel[high].data.methodForSort() >= pivot.data.methodForSort():
                 high = high - 1
 
             # check each data starting from the first index
             # as long as the traversed data are lower than the pivot
             # it stays at the left side
             # also not sorted
-            while low <= high and listModel[low].methodForSort() <= pivot.methodForSort():
+            while low <= high and listModel[low].data.methodForSort() <= pivot.data.methodForSort():
                 low = low + 1
 
             # if it reaches here, the loop at the top is break and
