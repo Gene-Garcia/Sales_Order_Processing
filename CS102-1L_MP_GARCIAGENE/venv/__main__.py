@@ -1,5 +1,6 @@
 from Controller.Controller import Controller
-
+from Helpers.DataHelper import DataHelper
+from Helpers.ASCIIHelper import ASCIIHelper
 """
 GARCIA, Gene Joseph V
 CS102-1L - Final Machine Problem
@@ -145,12 +146,83 @@ list = SinglyLinkedList()
     sort.sort(dataList, 0, len(dataList) - 1)
     for data in dataList:
         print(data.getCustomerId(), data.getName())
+        
+        hashT = HashTable(13)
+
+    c1 = CustomerInformation()
+    c1.setCustomerId(1)
+    c1.setName("ZRyan")
+
+    c2 = CustomerInformation()
+    c2.setCustomerId(2)
+    c2.setName("Ross")
+
+    c3 = CustomerInformation()
+    c3.setCustomerId(3)
+    c3.setName("Joee")
+
+    c4 = CustomerInformation()
+    c4.setCustomerId(4)
+    c4.setName("Pheebs")
+
+    c5 = CustomerInformation()
+    c5.setCustomerId(5)
+    c5.setName("Ash")
+
+    c6 = CustomerInformation()
+    c6.setCustomerId(4)
+    c6.setName("Pheebs")
+
+    # if string use id
+    hashT.storeData(ASCIIHelper.toASCII(c1.getName()), c1)
+    hashT.storeData(ASCIIHelper.toASCII(c2.getName()), c2)
+    hashT.storeData(ASCIIHelper.toASCII(c3.getName()), c3)
+    hashT.storeData(ASCIIHelper.toASCII(c4.getName()), c4)
+    hashT.storeData(ASCIIHelper.toASCII(c5.getName()), c5)
+    hashT.storeData(ASCIIHelper.toASCII(c6.getName()), c6)
+
+    i = 0
+    for data in hashT.table:
+        if data != None:
+            print(i, data.getName())
+        i += 1
+
+    found = hashT.findData(ASCIIHelper.toASCII("Ash"))
+    if found:
+        print(found.getName())
+    else:
+        print("not found")
 """
 
 def main():
     print("--__main__")
+    datas = DataHelper()
+    datas.populate()
+
+    current = datas.customerInformation.head
+    while current != None:
+        print(current.data.getCustomerId(), current.data.getName())
+        current = current.next
 
 
+    datas.customerInformation.head.data.setName("CHANGED")
+
+    i = 0
+    for data in datas.custInfoHashTable.table:
+        if data != None:
+            print(i, data.getCustomerId(), data.getName())
+        i += 1
+
+    print(datas.custInfoHashTable.findData(ASCIIHelper.toASCII("Phoebe Buffay")))
+
+    datas.customerOrder.printQueue()
+
+    datas.openOrderFile.printQueue()
+
+    datas.backOrderFile.printQueue()
+
+    print(datas.salesJournal.head.data.getJournalId())
+    datas.salesJournal.traverseNode()
 
 if __name__ == "__main__":
     main()
