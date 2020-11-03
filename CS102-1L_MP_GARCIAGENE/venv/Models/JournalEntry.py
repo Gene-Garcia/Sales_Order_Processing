@@ -22,6 +22,26 @@ class JournalEntry:
     def getDateCompleted(self):
         return self.__dateCompleted
 
+    def setPaymentStatus(self, status):
+        self.__paid = status
+    def getPaymentStatus(self):
+        return self.__paid
+
+    def setDatePaid(self, date):
+        self.__datePaid = date
+    def getDatePaid(self):
+        return self.__datePaid
+
+    def displaySummary(self):
+        print("\tJournal Id", self.__journalId)
+        print("\tDate Completed", self.__dateCompleted)
+        if self.__paid:
+            print("\tSales Order Payment Status is paid")
+            print("\tDate Paid", self.__datePaid)
+        else:
+            print("\tSales Order Payment Status is unpaid")
+        self.__salesOrder.displaySummary()
+
     # for sort
     def methodForSort(self):
         return self.getDateCompleted()
