@@ -76,10 +76,10 @@ class Controller:
             self.displayCustomers()
 
         elif menuSelection == 2:
-            pass
+            self.displaySalesJournals()
 
         elif menuSelection == 3:
-            pass
+            self.displayShippingLog()
 
     def showOtherMenu(self):
         print("""
@@ -202,10 +202,24 @@ class Controller:
                 print()
 
         else:
-            print("\tThere are no currently recorded customer")
+            print("\tThere are currently no recorded customer")
 
     def displaySalesJournals(self):
         print("\tDISPLAY SALES JOURNALS SORT BY DATE COMPLETED\n")
+
+        if self.data.salesJournal.head != None:
+
+            journalList = self.data.salesJournal.convertToList()
+            quicksort = QuickSort()
+            quicksort.sort(journalList, 0, len(journalList) - 1)
+
+            # display
+            for journal in journalList:
+                journal.data.displaySummary()
+                print()
+
+        else:
+            print("\tThere are currently no recorded sales journal")
 
     def displayShippingLog(self):
         print("\tDISPLAY SHIPPING LOG SORT BY DATE ")
