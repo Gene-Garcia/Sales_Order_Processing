@@ -64,13 +64,22 @@ class Controller:
                 break
 
     def showDisplayMenu(self):
-        """
-        1 Customer information
-        2 Sales journal records
-        3 Shipping log
-        4 SO Pending files
-        """
-        pass
+        print("""
+    1 Customer information
+    2 Sales journal records
+    3 Shipping log
+        """)
+        menuSelection = InputHelper.integerInputWithChoices("Select from display menu", [1, 2, 3])
+        print()
+
+        if menuSelection == 1:
+            self.displayCustomers()
+
+        elif menuSelection == 2:
+            pass
+
+        elif menuSelection == 3:
+            pass
 
     def showOtherMenu(self):
         print("""
@@ -91,6 +100,8 @@ class Controller:
 
         elif menuSelection == 5:
             pass
+
+    # other menu
 
     def markOrderAsPaid(self):
         print("\tMARK SALES ORDER AS PAID\n")
@@ -175,6 +186,31 @@ class Controller:
         else:
             print("\tThere currently no sales journal record")
 
+    # display menu
+    def displayCustomers(self):
+        print("\tDISPLAY CUSTOMER INFORMATION SORT BY CUSTOMER NAME\n")
+
+        if self.data.customerInformation.head != None:
+
+            customerList = self.data.customerInformation.convertToList()
+            quicksort = QuickSort()
+            quicksort.sort(customerList, 0, len(customerList) - 1)
+
+            # display
+            for customer in customerList:
+                customer.data.displaySummary()
+                print()
+
+        else:
+            print("\tThere are no currently recorded customer")
+
+    def displaySalesJournals(self):
+        print("\tDISPLAY SALES JOURNALS SORT BY DATE COMPLETED\n")
+
+    def displayShippingLog(self):
+        print("\tDISPLAY SHIPPING LOG SORT BY DATE ")
+
+    # main menu
 
     def billCustomer(self):
         print("\tBILL CUSTOMERS\n")

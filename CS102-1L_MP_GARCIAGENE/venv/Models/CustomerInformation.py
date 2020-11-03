@@ -28,6 +28,12 @@ class CustomerInformation:
     def getCreditLimit(self):
         return self.__creditLimit
 
+    def displaySummary(self):
+        print("\tCustomer Id", self.__customerId)
+        print("\tCustomer Name", self.__name)
+        print("\tAmount Payable PHP", self.__amountPayable)
+        print("\tCredit Limit PHP", self.__creditLimit)
+
     # for sort
     def methodForSort(self):
         return self.getName()
