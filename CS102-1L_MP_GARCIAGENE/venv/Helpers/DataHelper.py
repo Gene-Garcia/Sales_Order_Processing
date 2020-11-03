@@ -267,6 +267,8 @@ class DataHelper:
         j2.setJournalId(JournalEntry.getId())
         j2.setSalesOrder(so2)
         j2.setDateCompleted(s2.getDateShipped())
+        j2.setDatePaid(today)
+        j2.setPaymentStatus(True)
 
         self.salesJournal.insertNode(j1)
         self.salesJournal.insertNode(j2)

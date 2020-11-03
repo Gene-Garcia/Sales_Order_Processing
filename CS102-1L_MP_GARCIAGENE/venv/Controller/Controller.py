@@ -73,19 +73,107 @@ class Controller:
         pass
 
     def showOtherMenu(self):
-        """
-        1 Add Customer
-        2 Add Product
-        3 Add Product Stock
-        4 Mark Order as Delivered
-        4 Mark Order sa Paid
-        """
-        pass
+        print("""
+    1 Add Customer
+    2 Add Product
+    3 Add Product Stock
+    4 Mark Order sa Paid
+    5 Mark Order as Delivered
+        """)
+        menuSelection = InputHelper.integerInputWithChoices("Select from other menu", [1, 2, 3, 4, 5])
+        print()
+
+        if menuSelection == 1:
+            pass
+
+        elif menuSelection == 4:
+            self.markOrderAsPaid()
+
+        elif menuSelection == 5:
+            pass
 
     def markOrderAsPaid(self):
-        print("\tMARK SALES ORDER AS PAID")
+        print("\tMARK SALES ORDER AS PAID\n")
+        # display sales journal by date completed that are unpaid
+        # select a sales journal
+        # ask amount to be given
+        # set journalEntry as paid
+        # find customer model and compute its amount
 
-        # reduce customer's amount payable
+        if self.data.salesJournal.head != None:
+
+            # display sales journal by date completed
+            salesJournalList = self.data.salesJournal.convertToList()
+            quicksort = QuickSort()
+            # pass by reference
+            quicksort.sort(salesJournalList, 0, len(salesJournalList) - 1)
+
+            # temp sales journal ids that are unpaid
+            salesJournalIds = []
+
+            # display sales journal
+            for journalEntry in salesJournalList:
+                journalEntry = journalEntry.data
+
+                if journalEntry.getPaymentStatus() == True:
+                    # continue loop
+                    continue
+
+                # append the unpaid sales journal's id
+                salesJournalIds.append(journalEntry.getJournalId())
+
+                print("\t\tSales Journal Summary")
+                journalEntry.displaySummary()
+
+                # display customer
+                customerModel = self.data.custInfoHashTable.findData(journalEntry.getSalesOrder().getCustomerId())
+                print("\tCustomer name", customerModel.getName())
+
+                # display product
+                productModel = self.data.stockRecordsHashTable.findData(journalEntry.getSalesOrder().getProductId())
+                print("\tProduct Name", productModel.getName())
+
+                print()
+
+            if len(salesJournalIds) > 0:
+                # select a sales journal
+                selectedSalesJournalId = InputHelper.integerInputWithChoices("Select a sales journal Id", salesJournalIds)
+
+                # find sales journal using the selectedsalesjournalid
+                salesJournal = self.data.salesJournal.head
+                while salesJournal != None:
+                    if salesJournal.data.getJournalId() == selectedSalesJournalId:
+                        break
+                    salesJournal = salesJournal.next
+
+                print("\t\tSelected Sales Journal")
+                salesJournal.data.displaySummary()
+
+                # display customer
+                customerModel = self.data.custInfoHashTable.findData(salesJournal.data.getSalesOrder().getCustomerId())
+                print("\tCustomer name", customerModel.getName(), customerModel.getAmountPayable())
+
+                # display product
+                productModel = self.data.stockRecordsHashTable.findData(salesJournal.data.getSalesOrder().getProductId())
+                print("\tProduct Name", productModel.getName())
+
+                # update sales journal
+                salesJournal.data.setPaymentStatus(True)
+                salesJournal.data.setDatePaid(date.today())
+
+                # recomppute customer's amount payable
+                # implement stack
+                salesAmount = salesJournal.data.getSalesOrder().getQuantity() * productModel.getPrice()
+                customerModel.setAmountPayable( customerModel.getAmountPayable() - salesAmount  )
+
+                # even though that I only update the variables
+                # it will reflect in the singly linked list stored nodes, and in the hash table
+
+            else:
+                print("\tAll the current sales orders are paid by the customers")
+
+        else:
+            print("\tThere currently no sales journal record")
 
 
     def billCustomer(self):
@@ -96,6 +184,7 @@ class Controller:
 
             shippingLogList = self.data.shippingLog.convertToList()
             quicksort = QuickSort()
+            # pass by reference
             quicksort.sort(shippingLogList, 0, len(shippingLogList) - 1)
 
             # temporary list of sales order ids
@@ -105,26 +194,26 @@ class Controller:
             for log in shippingLogList:
                 log = log.data
                 # find sales order using shippingId
-                current = self.data.temporaryPendingFile.head
-                while current != None:
-                    if current.data.getShippingId() == log.getShippingId():
-                        salesOrderIdList.append(current.data.getSalesOrderId())
+                salesOrder = self.data.temporaryPendingFile.head
+                while salesOrder != None:
+                    if salesOrder.data.getShippingId() == log.getShippingId():
+                        salesOrderIdList.append(salesOrder.data.getSalesOrderId())
                         break
-                    current = current.next
+                    salesOrder = salesOrder.next
 
-                if current != None:
+                if salesOrder != None:
                     # sales order
-                    current.data.displaySummary()
+                    salesOrder.data.displaySummary()
 
                     # shipping details
                     log.displaySummary()
 
                     # display customer
-                    customerModel = self.data.custInfoHashTable.findData(current.data.getCustomerId())
+                    customerModel = self.data.custInfoHashTable.findData(salesOrder.data.getCustomerId())
                     print("\tCustomer name", customerModel.getName())
 
                     # display product
-                    productModel = self.data.stockRecordsHashTable.findData(current.data.getProductId())
+                    productModel = self.data.stockRecordsHashTable.findData(salesOrder.data.getProductId())
                     print("\tProduct Name", productModel.getName())
 
                 print()
