@@ -222,7 +222,21 @@ class Controller:
             print("\tThere are currently no recorded sales journal")
 
     def displayShippingLog(self):
-        print("\tDISPLAY SHIPPING LOG SORT BY DATE ")
+        print("\tDISPLAY SHIPPING LOG SORT BY DATE\n")
+
+        if self.data.shippingLog.head != None:
+
+            shippingList = self.data.shippingLog.convertToList()
+            quicksort = QuickSort()
+            quicksort.sort(shippingList, 0, len(shippingList) - 1)
+
+            # display
+            for shippingDetail in shippingList:
+                shippingDetail.data.displaySummary()
+                print()
+
+        else:
+            print("\tThere are currently no recorded shipping log")
 
     # main menu
 
