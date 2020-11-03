@@ -17,6 +17,7 @@ from DataStructures.Queue import Queue
 from Helpers.ASCIIHelper import ASCIIHelper
 
 from datetime import date
+import datetime
 
 class DataHelper:
 
@@ -107,17 +108,17 @@ class DataHelper:
     def __populateCustomerOrder(self):
         # customer orders
         cusOrder1 = CustomerOrder()
-        cusOrder1.setCustomerName(2)
+        cusOrder1.setCustomerId(2)
         cusOrder1.setItems([3, 1])
         cusOrder1.setItemQuantities([20, 10])
 
         cusOrder2 = CustomerOrder()
-        cusOrder2.setCustomerName(3)
+        cusOrder2.setCustomerId(3)
         cusOrder2.setItems([2, 3])
         cusOrder2.setItemQuantities([5, 15])
 
         cusOrder3 = CustomerOrder()
-        cusOrder3.setCustomerName(1)
+        cusOrder3.setCustomerId(1)
         cusOrder3.setItems([3])
         cusOrder3.setItemQuantities([30])
 
@@ -192,28 +193,28 @@ class DataHelper:
 
         so1 = SalesOrder()
         so1.setSalesOrderId(SalesOrder.getId())
-        so1.setDateFilled(today)
+        so1.setDateFilled(datetime.datetime(2020, 1, 29))
         so1.setCustomerId(1)
         so1.setProductId(2)
         so1.setQuantity(50)
 
         s1 = ShipmentDetails()
         s1.setShippingId(ShipmentDetails.getId())
-        s1.setDateShipped(today)
+        s1.setDateShipped(datetime.datetime(2020, 1, 30))
         s1.setDateDelivered(None)
 
         so1.setShippingId(s1.getShippingId())
 
         so2 = SalesOrder()
         so2.setSalesOrderId(SalesOrder.getId())
-        so2.setDateFilled(today)
+        so2.setDateFilled(datetime.datetime(2020, 3, 5))
         so2.setCustomerId(2)
         so2.setProductId(2)
         so2.setQuantity(50)
 
         s2 = ShipmentDetails()
         s2.setShippingId(ShipmentDetails.getId())
-        s2.setDateShipped(today)
+        s2.setDateShipped(datetime.datetime(2020, 3, 7))
         s2.setDateDelivered(None)
 
         so2.setShippingId(s2.getShippingId())
@@ -246,7 +247,7 @@ class DataHelper:
         j1 = JournalEntry()
         j1.setJournalId(JournalEntry.getId())
         j1.setSalesOrder(so1)
-        j1.setDateFiled(s1.getDateShipped())
+        j1.setDateCompleted(s1.getDateShipped())
 
         so2 = SalesOrder()
         so2.setSalesOrderId(SalesOrder.getId())
@@ -265,7 +266,7 @@ class DataHelper:
         j2 = JournalEntry()
         j2.setJournalId(JournalEntry.getId())
         j2.setSalesOrder(so2)
-        j2.setDateFiled(s2.getDateShipped())
+        j2.setDateCompleted(s2.getDateShipped())
 
         self.salesJournal.insertNode(j1)
         self.salesJournal.insertNode(j2)
@@ -273,8 +274,8 @@ class DataHelper:
     def populate(self):
         self.__populateStockRecords()
         self.__populateCustomerInformation()
-        #self.__populateCustomerOrder()
-        #self.__populateOpenOrderFile()
-        #self.__populateBackOrderFile()
-        #self.__populateSOPendingFile()
-        #self.__populateSalesJournal()
+        self.__populateCustomerOrder()
+        self.__populateOpenOrderFile()
+        self.__populateBackOrderFile()
+        self.__populateSOPendingFile()
+        self.__populateSalesJournal()

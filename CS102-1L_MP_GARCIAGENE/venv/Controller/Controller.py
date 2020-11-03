@@ -77,8 +77,16 @@ class Controller:
         1 Add Customer
         2 Add Product
         3 Add Product Stock
+        4 Mark Order as Delivered
+        4 Mark Order sa Paid
         """
         pass
+
+    def markOrderAsPaid(self):
+        print("\tMARK SALES ORDER AS PAID")
+
+        # reduce customer's amount payable
+
 
     def billCustomer(self):
         print("\tBILL CUSTOMERS\n")
@@ -131,7 +139,7 @@ class Controller:
                     break
                 salesOrder = salesOrder.next
 
-            print("\t\tSelected Sales Order")
+            print("\n\t\tSelected Sales Order")
             salesOrder.data.displaySummary()
 
             # display customer
@@ -145,9 +153,18 @@ class Controller:
             # remove the sales order from the temporaryPendingFile
             self.data.temporaryPendingFile.deleteNode(salesOrder)
 
+            # find shipmentdetails using salesOrder's
+            shippingDetail = self.data.shippingLog.head
+            while shippingDetail != None:
+                if shippingDetail.data.getShippingId() == salesOrder.data.getShippingId():
+                    break
+                shippingDetail = shippingDetail.next
+
             # create journal entry
             journalEntry = JournalEntry()
-            journalEntry.setDateFiled(date.today())
+            # shipping model date delivered
+            journalEntry.setDateCompleted(shippingDetail.data.getDateShipped())
+            print("\tDate Completed", shippingDetail.data.getDateShipped())
             journalEntry.setJournalId(JournalEntry.getId())
             journalEntry.setSalesOrder(salesOrder.data)
 
@@ -156,7 +173,7 @@ class Controller:
 
             # re-compute customers credit payable
 
-            print("\n\tCustomer billed with sales order #", salesOrder.data.getSalesOrderId())
+            print("\n\tCustomer", customerModel.getName(), "billed with sales order #", salesOrder.data.getSalesOrderId())
 
         else:
             print("\tThere are currently no sales orders to be billed")
