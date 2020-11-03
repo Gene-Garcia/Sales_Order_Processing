@@ -146,7 +146,7 @@ class Controller:
                         break
                     salesJournal = salesJournal.next
 
-                print("\t\tSelected Sales Journal")
+                print("\n\t\tSelected Sales Journal")
                 salesJournal.data.displaySummary()
 
                 # display customer
@@ -261,8 +261,11 @@ class Controller:
             self.data.salesJournal.insertNode(journalEntry)
 
             # re-compute customers credit payable
+            salesPrice = productModel.getPrice() * salesOrder.data.getQuantity()
+            customerModel.setAmountPayable( customerModel.getAmountPayable() + salesPrice )
 
             print("\n\tCustomer", customerModel.getName(), "billed with sales order #", salesOrder.data.getSalesOrderId())
+            print("\tCurrent amount payable of customer is PHP", customerModel.getAmountPayable())
 
         else:
             print("\tThere are currently no sales orders to be billed")

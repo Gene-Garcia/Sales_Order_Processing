@@ -193,28 +193,28 @@ class DataHelper:
 
         so1 = SalesOrder()
         so1.setSalesOrderId(SalesOrder.getId())
-        so1.setDateFilled(datetime.datetime(2020, 1, 29))
+        so1.setDateFilled(datetime.datetime(2020, 1, 29).date())
         so1.setCustomerId(1)
         so1.setProductId(2)
         so1.setQuantity(50)
 
         s1 = ShipmentDetails()
         s1.setShippingId(ShipmentDetails.getId())
-        s1.setDateShipped(datetime.datetime(2020, 1, 30))
+        s1.setDateShipped(datetime.datetime(2020, 1, 30).date())
         s1.setDateDelivered(None)
 
         so1.setShippingId(s1.getShippingId())
 
         so2 = SalesOrder()
         so2.setSalesOrderId(SalesOrder.getId())
-        so2.setDateFilled(datetime.datetime(2020, 3, 5))
+        so2.setDateFilled(datetime.datetime(2020, 3, 5).date())
         so2.setCustomerId(2)
         so2.setProductId(2)
         so2.setQuantity(50)
 
         s2 = ShipmentDetails()
         s2.setShippingId(ShipmentDetails.getId())
-        s2.setDateShipped(datetime.datetime(2020, 3, 7))
+        s2.setDateShipped(datetime.datetime(2020, 3, 7).date())
         s2.setDateDelivered(None)
 
         so2.setShippingId(s2.getShippingId())
