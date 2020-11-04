@@ -40,7 +40,9 @@ class DataHelper:
         # Hash table for search
         self.custInfoHashTable = HashTable(23)
         self.stockRecordsHashTable = HashTable(23)
+        # additional hash table
         self.journalHashTable = HashTable(23)
+        self.shippingLogHashTable = HashTable(23)
 
     def __populateStockRecords(self):
         # stock records
@@ -225,6 +227,9 @@ class DataHelper:
         self.salesOrderPendingFile.enqueue(so2)
         self.shippingLog.insertNode(s2)
 
+        self.shippingLogHashTable.storeData(s1.methodForHashTable(), s1)
+        self.shippingLogHashTable.storeData(s2.methodForHashTable(), s2)
+
         self.temporaryPendingFile.insertNode(so1)
         self.temporaryPendingFile.insertNode(so2)
 
@@ -276,6 +281,9 @@ class DataHelper:
 
         self.journalHashTable.storeData(j1.methodForHashTable(), j1)
         self.journalHashTable.storeData(j2.methodForHashTable(), j2)
+
+        self.shippingLogHashTable.storeData(s1.methodForHashTable(), s1)
+        self.shippingLogHashTable.storeData(s2.methodForHashTable(), s2)
 
     def populate(self):
         self.__populateStockRecords()

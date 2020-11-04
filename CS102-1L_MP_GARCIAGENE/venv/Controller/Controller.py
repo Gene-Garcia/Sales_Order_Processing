@@ -87,15 +87,6 @@ class Controller:
         self.otherMenus[menuSelection]()
 
     # reusable code
-    def findShippingDetails(self, shippingIdToSearch):
-        shippingDetail = self.data.shippingLog.head
-        while shippingDetail != None:
-            if shippingDetail.data.getShippingId() == shippingIdToSearch:
-                break
-            shippingDetail = shippingDetail.next
-
-        return shippingDetail
-    # reusable code
     def recordSalesOrder(self, salesOrder, customerModel, productModel):
         # check if stock inventory is enough for the order
         if salesOrder.getQuantity() <= productModel.getStock():
@@ -306,6 +297,8 @@ class Controller:
         # not yet delivered
         shippingIds = []
 
+        # travers the shipping log and get the shipping ids
+        # that are also not delivered
         shippingDetail = self.data.shippingLog.head
         while shippingDetail != None:
             if shippingDetail.data.getDateDelivered() == None:
@@ -320,22 +313,19 @@ class Controller:
             selectedShippingId = InputHelper.integerInputWithChoices("Select a shipping Id to be marked as delivered", shippingIds)
 
             # find shipping detail model
-            shippingDetail = self.findShippingDetails(selectedShippingId)
+            shippingDetail = self.data.shippingLogHashTable.findData(selectedShippingId)
 
             if shippingDetail != None:
                 # set as delivered
-                shippingDetail.data.setDateDelivered(date.today())
+                shippingDetail.setDateDelivered(date.today())
+                # it also automatically updates the shipping detail model in the hash table
 
-                print(f"\n\tShipping log record with ID #{selectedShippingId} is set as delivered as of {shippingDetail.data.getDateDelivered()}")
+                print(f"\n\tShipping log record with ID #{selectedShippingId} is set as delivered as of {shippingDetail.getDateDelivered()}")
 
         else:
             print("\tAll shipping logs are delivered")
 
     # display menu
-    def terminateProgram(self):
-        # save to text file
-        pass
-
     def displayCustomers(self):
         print("\t>>> DISPLAY CUSTOMER INFORMATION SORT BY CUSTOMER NAME <<<\n")
 
@@ -364,9 +354,15 @@ class Controller:
             quicksort.sort(journalList, 0, len(journalList) - 1)
 
             # display
+            print("\t--------------------------------------")
             for journal in journalList:
                 print("\t\t\tSALES JOURNAL ENTRY")
                 journal.data.displaySummary()
+
+                shippingDetail = self.data.shippingLogHashTable.findData(journal.data.getSalesOrder().getShippingId())
+                print("\n\t\t\tSHIPPING LOG DETAIL")
+                shippingDetail.displaySummary()
+                print("\t--------------------------------------")
                 print()
 
         else:
@@ -404,6 +400,10 @@ class Controller:
             print("\tThere are currently no recorded shipping log")
 
     # main menu
+    def terminateProgram(self):
+        # save to text file
+        pass
+
     def billCustomer(self):
         print("\t>>> BILL CUSTOMERS <<<\n")
         # includes re-computing customer credit/amount payable
@@ -468,12 +468,12 @@ class Controller:
             self.data.temporaryPendingFile.deleteNode(salesOrder)
 
             # find shipmentdetails using salesOrder's
-            shippingDetail = self.findShippingDetails(salesOrder.data.getShippingId())
+            shippingDetail = self.data.shippingLogHashTable.findData((salesOrder.data.getShippingId()))
 
             # create journal entry
             journalEntry = JournalEntry()
             # shipping model date delivered
-            journalEntry.setDateCompleted(shippingDetail.data.getDateShipped())
+            journalEntry.setDateCompleted(shippingDetail.getDateShipped())
             journalEntry.setJournalId(JournalEntry.getId())
             journalEntry.setSalesOrder(salesOrder.data)
             print(f"\t    Date Completed:    {journalEntry.getDateCompleted()}")
@@ -526,6 +526,8 @@ class Controller:
 
             # entry to shipping log
             self.data.shippingLog.insertNode(shippingDetails)
+            # store in hash table
+            self.data.shippingLogHashTable.storeData(shippingDetails.methodForHashTable(), shippingDetails)
             # entry to pending file
             self.data.salesOrderPendingFile.enqueue(salesOrderToShip)
             self.data.temporaryPendingFile.insertNode(salesOrderToShip)
@@ -625,9 +627,8 @@ class Controller:
 
         # select customer
         customerId = InputHelper.integerInputWithChoices("Select a customer Id", customerIdList)
-        customerOrder.setCustomerId(customerId)
 
-        # display products
+        # traverse stock recrods to display products and obtain the product ids
         print("\n\t\t\tPRODUCTS INFORMATION")
         productModel = self.data.stockRecords.head
         while productModel != None:
@@ -660,9 +661,15 @@ class Controller:
                 break
 
         # display customer order summary
-        a = 0
+        print("\n\t\t\tCUSTOMER ORDER SUMMARY")
+        print(f"\tCustomer Name:    {self.data.custInfoHashTable.findData(customerId).getName()}")
+        print(f"\tOrdered Products and Quantity")
+        for orderIndex in range(len(orderProductIds)):
+            productModel = self.data.stockRecordsHashTable.findData(orderProductIds[orderIndex])
+            print(f"\t{productModel.getName()}    {orderProductQuantities[orderIndex]} piece(s)   Total: {productModel.getPrice() * orderProductQuantities[orderIndex]}")
 
         # append to records
+        customerOrder.setCustomerId(customerId)
         customerOrder.setItems(orderProductIds)
         customerOrder.setItemQuantities(orderProductQuantities)
 

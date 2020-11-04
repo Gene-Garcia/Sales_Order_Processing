@@ -29,6 +29,10 @@ class ShipmentDetails:
     def methodForSort(self):
         return self.getDateShipped()
 
+    # for hash table
+    def methodForHashTable(self):
+        return self.getShippingId()
+
     # static variable
     highestId = 0
     @staticmethod
