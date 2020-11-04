@@ -29,10 +29,10 @@ class Product:
         return self.__unitPrice
 
     def displaySummary(self):
-        print("\tProduct Id", self.__productId)
-        print("\tProduct Name", self.__name)
-        print("\tCurrent Stocks", self.__inStock)
-        print("\tPrice", self.__unitPrice)
+        print(f"\t    Product ID:    #{self.__productId}")
+        print(f"\t  Product Name:    {self.__name}")
+        print(f"\tCurrent Stocks:    {self.__inStock} piece(s)")
+        print(f"\t    Unit Price:    PHP {self.__unitPrice}")
 
     # for hash table
     def methodForHashTable(self):

@@ -42,7 +42,7 @@ class InputHelper:
         userInput = None
         while True:
             try:
-                userInput = int(input("\t" + message + " >>").strip())
+                userInput = int(input(f"\t{message} - {choices} >>").strip())
 
                 if userInput in choices:
                     break

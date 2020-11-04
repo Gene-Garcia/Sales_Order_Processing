@@ -29,10 +29,10 @@ class CustomerInformation:
         return self.__creditLimit
 
     def displaySummary(self):
-        print("\tCustomer Id", self.__customerId)
-        print("\tCustomer Name", self.__name)
-        print("\tAmount Payable PHP", self.__amountPayable)
-        print("\tCredit Limit PHP", self.__creditLimit)
+        print(f"\t   Customer ID:    #{self.__customerId}")
+        print(f"\t          Name:    {self.__name}")
+        print(f"\t  Credit Limit:    PHP {self.__creditLimit}")
+        print(f"\tAmount Payable:    PHP {self.__amountPayable}")
 
     # for sort
     def methodForSort(self):

@@ -39,12 +39,12 @@ class SalesOrder:
         return self.__shippingId
 
     def displaySummary(self):
-        print("\tSales Order Id", self.__salesOrderId)
-        print("\tCustomer Id", self.__customerId)
-        print("\tProduct Id", self.__productId)
-        print("\tQuantity", self.__quantity)
-        print("\tDate Filled", self.__dateFilled)
-        print("\tShipping Id", self.__shippingId)
+        print(f"\tSales Order ID:    #{self.__salesOrderId}")
+        print(f"\t   Date Filled:    {self.__dateFilled}")
+        print(f"\t   Customer ID:    #{self.__customerId}")
+        print(f"\t    Product ID:    #{self.__productId}")
+        print(f"\t      Quantity:    {self.__quantity} piece(s)")
+        print(f"\t   Shipping ID:    #{self.__shippingId}")
 
     # for delete
     def methodForDelete(self):

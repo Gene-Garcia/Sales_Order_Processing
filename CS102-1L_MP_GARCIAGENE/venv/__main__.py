@@ -222,7 +222,7 @@ list = SinglyLinkedList()
 """
 
 def main():
-    print("--__main__")
+    print("\t\t\t\tXYZ Company")
     controller = Controller()
 
 if __name__ == "__main__":

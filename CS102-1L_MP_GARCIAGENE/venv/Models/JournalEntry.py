@@ -33,14 +33,16 @@ class JournalEntry:
         return self.__datePaid
 
     def displaySummary(self):
-        print("\tJournal Id", self.__journalId)
-        print("\tDate Completed", self.__dateCompleted)
+        print(f"\t    Journal ID:    #{self.__journalId}")
+        print(f"\tDate Completed:    {self.__dateCompleted}")
+
         if self.__paid:
+            print(f"\t     Date Paid:    {self.__datePaid}")
             print("\tSales Order Payment Status is paid")
-            print("\tDate Paid", self.__datePaid)
         else:
             print("\tSales Order Payment Status is unpaid")
-        print("\t\tSales Order Summary")
+        print("\t------------------------------------")
+        print("\t\tSALES ORDER SUMMARY")
         self.__salesOrder.displaySummary()
 
     # for sort

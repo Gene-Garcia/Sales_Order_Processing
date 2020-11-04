@@ -21,9 +21,9 @@ class ShipmentDetails:
         return self.__dateDelivered
 
     def displaySummary(self):
-        print("\tShipping Id", self.__shippingId)
-        print("\tDate Shipped", self.__dateShipped)
-        print("\tDate Delivered", self.__dateDelivered)
+        print(f"\t   Shipping ID:    #{self.__shippingId}")
+        print(f"\t  Date Shipped:    {self.__dateShipped}")
+        print(f"\tDate Delivered:    {self.__dateDelivered}")
 
     # for sort
     def methodForSort(self):
