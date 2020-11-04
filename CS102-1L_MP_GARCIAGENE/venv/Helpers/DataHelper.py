@@ -40,6 +40,7 @@ class DataHelper:
         # Hash table for search
         self.custInfoHashTable = HashTable(23)
         self.stockRecordsHashTable = HashTable(23)
+        self.journalHashTable = HashTable(23)
 
     def __populateStockRecords(self):
         # stock records
@@ -273,11 +274,14 @@ class DataHelper:
         self.salesJournal.insertNode(j1)
         self.salesJournal.insertNode(j2)
 
+        self.journalHashTable.storeData(j1.methodForHashTable(), j1)
+        self.journalHashTable.storeData(j2.methodForHashTable(), j2)
+
     def populate(self):
         self.__populateStockRecords()
         self.__populateCustomerInformation()
-        self.__populateCustomerOrder()
-        self.__populateOpenOrderFile()
-        self.__populateBackOrderFile()
-        self.__populateSOPendingFile()
-        self.__populateSalesJournal()
+        #self.__populateCustomerOrder()
+        #self.__populateOpenOrderFile()
+        #self.__populateBackOrderFile()
+        #self.__populateSOPendingFile()
+        #self.__populateSalesJournal()

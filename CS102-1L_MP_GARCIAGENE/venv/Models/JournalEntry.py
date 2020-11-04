@@ -47,6 +47,9 @@ class JournalEntry:
     def methodForSort(self):
         return self.getDateCompleted()
 
+    def methodForHashTable(self):
+        return self.getJournalId()
+
     # static variable
     highestId = 0
 
