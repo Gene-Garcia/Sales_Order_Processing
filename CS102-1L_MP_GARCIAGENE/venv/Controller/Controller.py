@@ -228,6 +228,7 @@ class Controller:
                 journalEntry = journalEntry.data
 
                 if journalEntry.getPaymentStatus() == True:
+                    # paid
                     # continue loop
                     continue
 
@@ -289,11 +290,37 @@ class Controller:
 
     def markOrderAsDelivered(self):
         print("\tMARK ORDER AS DELIVERED\n")
-        # for other functions
-        # diba dapat delivered muna yung product bago bayaran???
 
-        # find a sales order in the sales journal
-        # all sales order there are billed and shippe already
+        # display shipping log
+        # select as shipping id
+        # set as delivered
+
+        shippingIds = []
+
+        shippingDetail = self.data.shippingLog.head
+        while shippingDetail != None:
+            if shippingDetail.data.getDateDelivered() == None:
+                shippingIds.append(shippingDetail.data.getShippingId())
+                print("\t\tShipping Detail Summary")
+                shippingDetail.data.displaySummary()
+                print()
+
+            shippingDetail = shippingDetail.next
+
+        selectedShippingId = InputHelper.integerInputWithChoices("Select a shipping Id to be marked as delivered", shippingIds)
+
+        # find shipping id
+        shippingDetail = self.data.shippingLog.head
+        while shippingDetail != None:
+            if shippingDetail.data.getShippingId() == selectedShippingId:
+                break
+            shippingDetail = shippingDetail.next
+
+        if shippingDetail != None:
+            # set as delivered
+            shippingDetail.data.setDateDelivered(date.today())
+
+            print("\tShipping log record with id ", selectedShippingId, "is set as delivered as of", shippingDetail.data.getDateDelivered())
 
     # display menu
     def displayCustomers(self):
