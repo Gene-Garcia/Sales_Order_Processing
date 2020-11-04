@@ -62,3 +62,18 @@ class InputHelper:
             except:
                 print("\tInvalid input, decimals only.")
         return userInput
+
+    @staticmethod
+    def floatInput(message, min):
+        userInput = None
+        while True:
+            try:
+                userInput = float(input("\t" + message + " >>").strip())
+
+                if userInput >= min:
+                    break
+                else:
+                    print("\tMinimum value is", min)
+            except:
+                print("\tInvalid input, decimal only.")
+        return userInput
