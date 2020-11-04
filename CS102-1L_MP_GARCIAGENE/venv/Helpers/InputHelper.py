@@ -11,7 +11,7 @@ class InputHelper:
             print("\tInput empty")
         return userInput
 
-    @staticmethod
+    """@staticmethod
     def integerInput(message):
         userInput = None
         while True:
@@ -20,7 +20,7 @@ class InputHelper:
                 break
             except:
                 print("\tInvalid input, integers only.")
-        return userInput
+        return userInput"""
 
     @staticmethod
     def integerInput(message, min):
@@ -52,7 +52,7 @@ class InputHelper:
                 print("\tInvalid input, integers only.")
         return userInput
 
-    @staticmethod
+    """@staticmethod
     def floatInput(message):
         userInput = None
         while True:
@@ -61,7 +61,7 @@ class InputHelper:
                 break
             except:
                 print("\tInvalid input, decimals only.")
-        return userInput
+        return userInput"""
 
     @staticmethod
     def floatInput(message, min):

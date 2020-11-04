@@ -28,7 +28,7 @@ class Controller:
         menuSelection = None
 
         while menuSelection != 0:
-            print("\n\t1 Take customer's ordert")
+            print("\n\t1 Take customer's order")
             print("\t2 Create sales order")
             print("\t3 Process back orders")
             print("\t4 Ship orders")
@@ -113,6 +113,30 @@ class Controller:
 
         return shippingDetail
 
+    def recordSalesOrder(self, salesOrder, customerModel, productModel):
+        # check if stock inventory is enough for the order
+        if salesOrder.getQuantity() <= productModel.getStock():
+
+            # check customer's credit limit and current payable
+            totalSales = salesOrder.getQuantity() * productModel.getPrice()
+            if (customerModel.getAmountPayable() + totalSales) >= customerModel.getCreditLimit():
+                # file in back order file
+                self.data.backOrderFile.enqueue(salesOrder)
+                print("\n\tSales Order Queued in Back Order File because customer has maxed out their credit limit worh PHP",
+                      customerModel.getCreditLimit(), "\n")
+
+            else:
+                # reduce stock
+                productModel.setStock(productModel.getStock() - toProcess.getItemQuantities()[orderIndex])
+                # file in open order file
+                self.data.openOrderFile.enqueue(salesOrder)
+                print("\n\tSales Order Queued in Open Order File Successfully\n")
+
+        else:
+            # file in back order file
+            self.data.backOrderFile.enqueue(salesOrder)
+            print("\n\tSales Order Queued in Back Order File Due to insufficient quantity\n")
+
     # other menu
     def addCustomer(self):
         print("\t>>> ADD NEW CUSTOMER RECORD <<<\n")
@@ -129,7 +153,7 @@ class Controller:
 
         if customerModel == None:
             # set credit limit
-            creditLimit = InputHelper.integerInput("Enter customer credit limit", min = 0)
+            creditLimit = InputHelper.floatInput("Enter customer credit limit", min = 0)
 
             customerModel = CustomerInformation()
             customerModel.setName(name)
@@ -537,11 +561,6 @@ class Controller:
 
             if customerModel != None:
                 """"# reconsile and check amount payables and credit limit"""
-                # # # # what if a product is already stocked but, the sales order is at the back of the queue
-
-                # check inventory
-                # if sufficient enqueue to open order
-                # otherwise enqueue again to back order file
 
                 productModel = self.data.stockRecordsHashTable.findData(salesBackOrder.getProductId())
                 if productModel != None:
@@ -549,17 +568,8 @@ class Controller:
                     salesBackOrder.displaySummary()
                     print("\tTotal cost in PHP", productModel.getPrice() * salesBackOrder.getQuantity())
 
-                    # check if stock inventory is enough for the order
-                    if salesBackOrder.getQuantity() <= productModel.getStock():
-                        # reduce stock
-                        productModel.setStock(productModel.getStock() - salesBackOrder.getQuantity())
-                        # file in open order file
-                        self.data.openOrderFile.enqueue(salesBackOrder)
-                        print("\n\tSales Order Queued in Open Order File Successfully")
-                    else:
-                        # file in back order file
-                        self.data.backOrderFile.enqueue(salesBackOrder)
-                        print("\n\tSales Order Queued in Back Order File Again Due to insufficient quantity")
+                    # enqueued again if stock is still insufficient or customers credit limit is not enough
+                    self.recordSalesOrder(salesBackOrder, customerModel, productModel)
 
         else:
             print("\tThere are currently no back orders in queue")
@@ -597,19 +607,11 @@ class Controller:
                         # display sales order
                         print("\tSales Order for", salesOrder.getCustomerId(), customerModel.getName())
                         salesOrder.displaySummary()
-                        print("\tTotal cost of", productModel.getName(),"in PHP", productModel.getPrice() * toProcess.getItemQuantities()[orderIndex])
 
-                        # check if stock inventory is enough for the order
-                        if toProcess.getItemQuantities()[orderIndex] <= productModel.getStock():
-                            # reduce stock
-                            productModel.setStock( productModel.getStock() - toProcess.getItemQuantities()[orderIndex] )
-                            # file in open order file
-                            self.data.openOrderFile.enqueue(salesOrder)
-                            print("\n\tSales Order Queued in Open Order File Successfully\n")
-                        else:
-                            # file in back order file
-                            self.data.backOrderFile.enqueue(salesOrder)
-                            print("\n\tSales Order Queued in Back Order File Due to insufficient quantity\n")
+                        totalSales = productModel.getPrice() * toProcess.getItemQuantities()[orderIndex]
+                        print("\tTotal cost of", productModel.getName(),"in PHP", totalSales)
+
+                        self.recordSalesOrder(salesOrder, customerModel, productModel)
 
             else:
                 print("\tCustomer not found with id", toProcess.getCustomerName())
