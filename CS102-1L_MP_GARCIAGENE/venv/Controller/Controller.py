@@ -85,7 +85,7 @@ class Controller:
         print("""
     1 Add Customer
     2 Add Product
-    3 Add Product Stock
+    3 Increase Product Stock
     4 Mark Order sa Paid
     5 Mark Order as Delivered
         """)
@@ -93,15 +93,61 @@ class Controller:
         print()
 
         if menuSelection == 1:
-            pass
+            self.addCustomer()
+
+        elif menuSelection == 2:
+            self.addProduct()
+
+        elif menuSelection == 3:
+            self.increaseProductStock()
 
         elif menuSelection == 4:
             self.markOrderAsPaid()
 
         elif menuSelection == 5:
-            pass
+            self.markOrderAsDelivered()
 
     # other menu
+    def addCustomer(self):
+        print("\tADD NEW CUSTOMER RECORD\n")
+
+        # get name
+        name = InputHelper.stringInput("Enter customer name")
+
+        # check if name is existing
+        customerModel = self.data.customerInformation.head
+        while customerModel != None:
+            if customerModel.data.getName().upper() == name.upper():
+                break # customer exists
+            customerModel = customerModel.next
+
+        if customerModel == None:
+            # set credit limit
+            creditLimit = InputHelper.integerInput("Enter customer credit limit", min = 0)
+
+            customerModel = CustomerInformation()
+            customerModel.setName(name)
+            customerModel.setCustomerId(CustomerInformation.getId())
+            customerModel.setAmountPayable(0)
+            customerModel.setCreditLimit(creditLimit)
+
+            # insert node
+            self.data.customerInformation.insertNode(customerModel)
+
+            # insert to hash table
+            self.data.custInfoHashTable.storeData(customerModel.methodForHashTable(), customerModel)
+
+        else:
+            print("\tCustomer with name", name, "is already existing")
+
+
+    def addProduct(self):
+        print("\tADD NEW PRODUCT\n")
+        # check if product name is existing
+
+    def increaseProductStock(self):
+        print("\tINCREASE PRODUCT INVENTORY STOCK\n")
+        # find product first
 
     def markOrderAsPaid(self):
         print("\tMARK SALES ORDER AS PAID\n")
@@ -185,6 +231,14 @@ class Controller:
 
         else:
             print("\tThere currently no sales journal record")
+
+    def markOrderAsDelivered(self):
+        print("\tMARK ORDER AS DELIVERED\n")
+        # for other functions
+        # diba dapat delivered muna yung product bago bayaran???
+
+        # find a sales order in the sales journal
+        # all sales order there are billed and shippe already
 
     # display menu
     def displayCustomers(self):
