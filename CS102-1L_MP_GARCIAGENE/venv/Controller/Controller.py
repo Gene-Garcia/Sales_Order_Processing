@@ -9,6 +9,7 @@ from Models.SalesOrder import SalesOrder
 from Models.CustomerInformation import  CustomerInformation
 from Models.ShipmentDetails import ShipmentDetails
 from Models.JournalEntry import JournalEntry
+from Models.Product import Product
 
 from datetime import date
 
@@ -138,16 +139,70 @@ class Controller:
             self.data.custInfoHashTable.storeData(customerModel.methodForHashTable(), customerModel)
 
         else:
-            print("\tCustomer with name", name, "is already existing")
-
+            print("\tCustomer with name", name, "is already existing.")
 
     def addProduct(self):
         print("\tADD NEW PRODUCT\n")
         # check if product name is existing
 
+        # get product name
+        productName = InputHelper.stringInput("Enter new product's name").upper()
+
+        # find product name
+        productModel = self.data.stockRecords.head
+        while productModel != None:
+            if productModel.data.getName() == productName:
+                break # product is already existing
+            productModel = productModel.next
+
+        if productModel == None:
+            basePrice = InputHelper.floatInput("Enter product's price", 0)
+            productStock = InputHelper.integerInput("Enter current product stock", 0)
+
+            productModel = Product()
+            productModel.setProductId(Product.getId())
+            productModel.setName(productName)
+            productModel.setPrice(basePrice)
+            productModel.setStock(productStock)
+
+            # insert to stock records
+            self.data.stockRecords.insertNode(productModel)
+
+            # insert to stock records hash table
+            self.data.stockRecordsHashTable.storeData(productModel.methodForHashTable(), productModel)
+
+        else:
+            print("\tProduct with", productName, "is already existing.")
+
     def increaseProductStock(self):
         print("\tINCREASE PRODUCT INVENTORY STOCK\n")
-        # find product first
+
+        productIds = []
+
+        # display products first
+        productModel = self.data.stockRecords.head
+
+        if productModel != None:
+            while productModel != None:
+                print("\t\tProduct Record Summary")
+                productIds.append(productModel.data.getProductId())
+                productModel.data.displaySummary()
+                productModel = productModel.next
+                print()
+
+            # select a product id to increase
+            selectedProductId = InputHelper.integerInputWithChoices("Select a product Id to increase stock", productIds)
+
+            # find productModel in hash table
+            productModel = self.data.stockRecordsHashTable.findData(selectedProductId)
+
+            # get stock numbers to add
+            stocks = InputHelper.integerInput("How many stocks will the product be increased", min = 0)
+
+            productModel.setStock( productModel.getStock() + stocks )
+
+        else:
+            print("\tThere are currently no stock records to increase")
 
     def markOrderAsPaid(self):
         print("\tMARK SALES ORDER AS PAID\n")

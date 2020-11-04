@@ -28,6 +28,12 @@ class Product:
     def getPrice(self):
         return self.__unitPrice
 
+    def displaySummary(self):
+        print("\tProduct Id", self.__productId)
+        print("\tProduct Name", self.__name)
+        print("\tCurrent Stocks", self.__inStock)
+        print("\tPrice", self.__unitPrice)
+
     # for hash table
     def methodForHashTable(self):
         return self.getProductId()
