@@ -119,6 +119,14 @@ class Controller:
             # file in back order file
             self.data.backOrderFile.enqueue(salesOrder)
             print("\n\tSales Order Queued in Back Order File Due to insufficient quantity\n")
+    # reusable code
+    def displayOrderSummary(self, orderQuantity, productName, productPrice, customerName):
+        # display customer
+        print(f"\n\t     Customer Name:    {customerName}")
+        # display product
+        print(f"\t      Product Name:    {productName}")
+        if orderQuantity != -1:
+            print(f"\t Total Sales Price:    PHP {productPrice * orderQuantity}")
 
     # other menu
     def addCustomer(self):
@@ -244,14 +252,15 @@ class Controller:
                 # append the unpaid sales journal's id
                 salesJournalIds.append(journalEntry.getJournalId())
 
-                print("\t\t\tSALES JOURNAL SUMMARY")
+                print("\t\t\tSALES JOURNAL ENTRY TO BE PAID")
                 journalEntry.displaySummary()
 
                 customerModel = self.data.custInfoHashTable.findData(journalEntry.getSalesOrder().getCustomerId())
-                print("\tCustomer name", customerModel.getName())
-
                 productModel = self.data.stockRecordsHashTable.findData(journalEntry.getSalesOrder().getProductId())
-                print("\tProduct Name", productModel.getName())
+
+                # display
+                self.displayOrderSummary(journalEntry.getSalesOrder().getQuantity(), productModel.getName(),
+                                         productModel.getPrice(), customerModel.getName())
                 print()
 
             if len(salesJournalIds) > 0:
@@ -261,29 +270,23 @@ class Controller:
                 # find sales journal using the selectedSalesJournalId in hash table
                 salesJournal = self.data.journalHashTable.findData(selectedSalesJournalId)
 
-                print("\n\t\t\tSELECTED SALES JOURNAL")
+                print("\n\t\t\tSELECTED SALES JOURNAL TO BE PAID")
                 salesJournal.displaySummary()
 
                 customerModel = self.data.custInfoHashTable.findData(salesJournal.getSalesOrder().getCustomerId())
-                print(f"\n\t     Customer Name:    {customerModel.getName()}")
-
                 productModel = self.data.stockRecordsHashTable.findData(salesJournal.getSalesOrder().getProductId())
-                print(f"\t      Product Name:    {productModel.getName()}")
-                print(f"\t Total Sales Price:    PHP {productModel.getPrice() * salesJournal.getSalesOrder().getQuantity()}")
 
                 # update sales journal
                 salesJournal.setPaymentStatus(True)
                 salesJournal.setDatePaid(date.today())
 
-                # recomppute customer's amount payable
+                # re-compute customer's amount payable
                 salesAmount = salesJournal.getSalesOrder().getQuantity() * productModel.getPrice()
                 customerModel.setAmountPayable( customerModel.getAmountPayable() - salesAmount  )
 
-                """print("\n\t\t\tSELECTED SALES JOURNAL")
-                salesJournal.displaySummary()
-                print(f"\n\t     Customer Name:    {customerModel.getName()}")
-                print(f"\t      Product Name:    {productModel.getName()}")
-                print(f"\t Total Sales Price:    PHP {productModel.getPrice() * salesJournal.getSalesOrder().getQuantity()}")"""
+                # display
+                self.displayOrderSummary(salesJournal.getSalesOrder().getQuantity(), productModel.getName(),
+                                         productModel.getPrice(), customerModel.getName())
 
                 print(f"\n\tSales Journal record with ID #{salesJournal.getJournalId()} is paid as of {salesJournal.getDatePaid()}")
 
@@ -307,7 +310,7 @@ class Controller:
         while shippingDetail != None:
             if shippingDetail.data.getDateDelivered() == None:
                 shippingIds.append(shippingDetail.data.getShippingId())
-                print("\t\t\tSHIPPING DETAIL SUMMARY")
+                print("\t\t\tSHIPPING LOG DETAILS")
                 shippingDetail.data.displaySummary()
                 print()
 
@@ -344,7 +347,7 @@ class Controller:
 
             # display
             for customer in customerList:
-                print("\t\tCustomer Information Summary")
+                print("\t\t\tCUSTOMER INFORMATION RECORDS")
                 customer.data.displaySummary()
                 print()
 
@@ -352,7 +355,7 @@ class Controller:
             print("\tThere are currently no recorded customer")
 
     def displaySalesJournals(self):
-        print("\t>>> DISPLAY SALES JOURNALS SORT BY DATE COMPLETED <<<\n")
+        print("\t>>> DISPLAY SALES JOURNAL ENTRIES SORT BY DATE COMPLETED <<<\n")
 
         if self.data.salesJournal.head != None:
 
@@ -362,7 +365,7 @@ class Controller:
 
             # display
             for journal in journalList:
-                print("\t\tSales Journal Entry Summary")
+                print("\t\t\tSALES JOURNAL ENTRY")
                 journal.data.displaySummary()
                 print()
 
@@ -370,7 +373,7 @@ class Controller:
             print("\tThere are currently no recorded sales journal")
 
     def displayShippingLog(self):
-        print("\t>>> DISPLAY SHIPPING LOG SORT BY DATE <<<\n")
+        print("\t>>> DISPLAY SHIPPING LOGS SORT BY DATE <<<\n")
 
         if self.data.shippingLog.head != None:
 
@@ -387,13 +390,13 @@ class Controller:
                         break
                     salesOrder = salesOrder.next
 
-                print("\t\tShipping Log Summary")
+                print("\t\t\tSHIPPING LOG DETAILS")
                 shippingDetail.data.displaySummary()
                 if salesOrder == None:
                     # already billed
                     print("\tSales order of this shipping log is already recorded in the sales journal")
                 else:
-                    print("\t\tSales Order Summary")
+                    print("\t\t\tSALES ORDER SUMMARY")
                     salesOrder.data.displaySummary()
                 print()
 
@@ -427,23 +430,19 @@ class Controller:
 
                 if salesOrder != None:
                     # sales order
-                    print("\t\t\tSALES ORDER SUMMARY")
+                    print("\t\t\tSALES ORDER FOR BILLING")
                     salesOrder.data.displaySummary()
 
+                    customerModel = self.data.custInfoHashTable.findData(salesOrder.data.getCustomerId())
+                    productModel = self.data.stockRecordsHashTable.findData(salesOrder.data.getProductId())
+
+                    # display
+                    self.displayOrderSummary(salesOrder.data.getQuantity(), productModel.getName(),
+                                             productModel.getPrice(), customerModel.getName())
+
                     # shipping details
-                    print("\t----------------------------------")
                     print("\t\t\tSHIPPING LOG SUMMARY")
                     log.displaySummary()
-
-                    # display customer
-                    customerModel = self.data.custInfoHashTable.findData(salesOrder.data.getCustomerId())
-                    print(f"\n\t     Customer Name:    {customerModel.getName()}")
-
-                    # display product
-                    productModel = self.data.stockRecordsHashTable.findData(salesOrder.data.getProductId())
-                    print(f"\t      Product Name:    {productModel.getName()}")
-                    print(f"\t Total Sales Price:    PHP {productModel.getPrice() * salesOrder.data.getQuantity()}")
-
                 print()
 
             # select sales order
@@ -456,26 +455,17 @@ class Controller:
                     break
                 salesOrder = salesOrder.next
 
-            print("\n\t\t\tSELECTED SALES ORDER")
+            print("\n\t\t\tSELECTED SALES ORDER FOR BILLING")
             salesOrder.data.displaySummary()
 
-            # display customer
             customerModel = self.data.custInfoHashTable.findData(salesOrder.data.getCustomerId())
-            print(f"\n\t     Customer Name:    {customerModel.getName()}")
-
-            # display product
             productModel = self.data.stockRecordsHashTable.findData(salesOrder.data.getProductId())
-            print(f"\t      Product Name:    {productModel.getName()}")
-            print(f"\t Total Sales Price:    PHP {productModel.getPrice() * salesOrder.data.getQuantity()}")
+
+            # display
+            self.displayOrderSummary(salesOrder.data.getQuantity(), productModel.getName(), productModel.getPrice(), customerModel.getName())
 
             # remove the sales order from the temporaryPendingFile
             self.data.temporaryPendingFile.deleteNode(salesOrder)
-
-            """shippingDetail = self.data.shippingLog.head
-            while shippingDetail != None:
-                if shippingDetail.data.getShippingId() == salesOrder.data.getShippingId():
-                    break
-                shippingDetail = shippingDetail.next"""
 
             # find shipmentdetails using salesOrder's
             shippingDetail = self.findShippingDetails(salesOrder.data.getShippingId())
@@ -498,8 +488,8 @@ class Controller:
             salesPrice = productModel.getPrice() * salesOrder.data.getQuantity()
             customerModel.setAmountPayable( customerModel.getAmountPayable() + salesPrice )
 
-            print("\n\tCustomer", customerModel.getName(), "billed with sales order #", salesOrder.data.getSalesOrderId())
-            print("\tCurrent amount payable of customer is PHP", customerModel.getAmountPayable())
+            print(f"\n\tCustomer {customerModel.getName()} billed with sales order #{salesOrder.data.getSalesOrderId()}")
+            print(f"\tCurrent amount payable of customer is PHP {customerModel.getAmountPayable()}")
 
         else:
             print("\tThere are currently no sales orders to be billed")
@@ -522,17 +512,14 @@ class Controller:
             # reference shipping details to sales order
             salesOrderToShip.setShippingId(shippingDetails.getShippingId())
 
-            print("\n\t\t\tSALES ORDER SUMMARY")
+            print("\n\t\t\tSALES ORDER FOR SHIPMENT")
             salesOrderToShip.displaySummary()
 
-            # display customer
             customerModel = self.data.custInfoHashTable.findData(salesOrderToShip.getCustomerId())
-            print(f"\n\t     Customer Name:    {customerModel.getName()}")
-
-            # display product
             productModel = self.data.stockRecordsHashTable.findData(salesOrderToShip.getProductId())
-            print(f"\t      Product Name:    {productModel.getName()}")
-            print(f"\t Total Sales Price:    PHP {productModel.getPrice() * salesOrderToShip.getQuantity()}")
+
+            # display
+            self.displayOrderSummary(salesOrderToShip.getQuantity(), productModel.getName(), productModel.getPrice(), customerModel.getName())
 
             print("\n\t\t\tSHIPPING LOG DETAILS")
             shippingDetails.displaySummary()
@@ -564,9 +551,11 @@ class Controller:
 
                 productModel = self.data.stockRecordsHashTable.findData(salesBackOrder.getProductId())
                 if productModel != None:
-                    print("\tSales Order for", salesBackOrder.getCustomerId(), customerModel.getName())
+                    print("\n\t\t\tBACK SALES ORDER SUMMARY")
                     salesBackOrder.displaySummary()
-                    print("\tTotal cost in PHP", productModel.getPrice() * salesBackOrder.getQuantity())
+
+                    # display
+                    self.displayOrderSummary(salesBackOrder.getQuantity(), productModel.getName(), productModel.getPrice(), customerModel.getName())
 
                     # enqueued again if stock is still insufficient or customers credit limit is not enough
                     self.recordSalesOrder(salesBackOrder, customerModel, productModel)
@@ -603,12 +592,11 @@ class Controller:
                         salesOrder.setDateFilled(date.today())
                         # no shipping id yet
 
+                        print("\t\t\tNEW SALES ORDER")
                         # display sales order
-                        print("\tSales Order for", salesOrder.getCustomerId(), customerModel.getName())
                         salesOrder.displaySummary()
-
-                        totalSales = productModel.getPrice() * toProcess.getItemQuantities()[orderIndex]
-                        print("\tTotal cost of", productModel.getName(),"in PHP", totalSales)
+                        # display
+                        self.displayOrderSummary(toProcess.getItemQuantities()[orderIndex], productModel.getName(), productModel.getPrice(), customerModel.getName())
 
                         self.recordSalesOrder(salesOrder, customerModel, productModel)
 
@@ -670,6 +658,9 @@ class Controller:
             userInput = InputHelper.stringInput("Enter Y to add more products").upper()
             if userInput != "Y":
                 break
+
+        # display customer order summary
+        a = 0
 
         # append to records
         customerOrder.setItems(orderProductIds)

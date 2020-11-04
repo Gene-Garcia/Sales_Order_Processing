@@ -41,8 +41,7 @@ class JournalEntry:
             print("\tSales Order Payment Status is paid")
         else:
             print("\tSales Order Payment Status is unpaid")
-        print("\t------------------------------------")
-        print("\t\tSALES ORDER SUMMARY")
+        print("\n\t\t\tSALES ORDER SUMMARY")
         self.__salesOrder.displaySummary()
 
     # for sort
