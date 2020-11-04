@@ -40,6 +40,7 @@ class JournalEntry:
             print("\tDate Paid", self.__datePaid)
         else:
             print("\tSales Order Payment Status is unpaid")
+        print("\t\tSales Order Summary")
         self.__salesOrder.displaySummary()
 
     # for sort

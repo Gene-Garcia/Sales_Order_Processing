@@ -198,6 +198,7 @@ class Controller:
 
             # display
             for customer in customerList:
+                print("\t\tCustomer Information Summary")
                 customer.data.displaySummary()
                 print()
 
@@ -215,6 +216,7 @@ class Controller:
 
             # display
             for journal in journalList:
+                print("\t\tSales Journal Entry Summary")
                 journal.data.displaySummary()
                 print()
 
