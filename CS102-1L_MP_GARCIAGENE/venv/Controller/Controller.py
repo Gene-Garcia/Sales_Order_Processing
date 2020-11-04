@@ -26,18 +26,17 @@ class Controller:
 
     def showMainMenu(self):
         menuSelection = None
+
+        print("\n\t1 Take customer's ordert")
+        print("\t2 Create sales order")
+        print("\t3 Process back orders")
+        print("\t4 Ship orders")
+        print("\t5 Bill customer")
+        print("\t6 Display records")
+        print("\t7 Other Menu")
+        print("\t0 Terminate program")
         while menuSelection != 0:
-            print("""
-    1 Take customer's order
-    2 Create sales order
-    3 Process back orders
-    4 Ship orders
-    5 Bill customer # also insert record in Sales Journal
-    6 Display records
-    7 Other Menu
-    0 Terminate program""")
             menuSelection = InputHelper.integerInputWithChoices("Select from menu", [1, 2, 3, 4, 5, 6, 7, 0])
-            print()
 
             if menuSelection == 1:
                 self.takeCustomerOrder()
@@ -65,11 +64,9 @@ class Controller:
                 break
 
     def showDisplayMenu(self):
-        print("""
-    1 Customer information
-    2 Sales journal records
-    3 Shipping log
-        """)
+        print("\n\t1 Customer information")
+        print("\t2 Sales journal records")
+        print("\t3 Shipping log")
         menuSelection = InputHelper.integerInputWithChoices("Select from display menu", [1, 2, 3])
         print()
 
@@ -83,13 +80,11 @@ class Controller:
             self.displayShippingLog()
 
     def showOtherMenu(self):
-        print("""
-    1 Add Customer
-    2 Add Product
-    3 Increase Product Stock
-    4 Mark Order sa Paid
-    5 Mark Order as Delivered
-        """)
+        print("\n\t1 Add Customer")
+        print("\t2 Add Product")
+        print("\t3 Increase Product Stock")
+        print("\t4 Mark Order sa Paid")
+        print("\t5 Mark Order as Delivered")
         menuSelection = InputHelper.integerInputWithChoices("Select from other menu", [1, 2, 3, 4, 5])
         print()
 
@@ -110,7 +105,7 @@ class Controller:
 
     # other menu
     def addCustomer(self):
-        print("\tADD NEW CUSTOMER RECORD\n")
+        print("\t>>> ADD NEW CUSTOMER RECORD <<<\n")
 
         # get name
         name = InputHelper.stringInput("Enter customer name")
@@ -142,7 +137,7 @@ class Controller:
             print("\tCustomer with name", name, "is already existing.")
 
     def addProduct(self):
-        print("\tADD NEW PRODUCT\n")
+        print("\t>>> ADD NEW PRODUCT <<<\n")
         # check if product name is existing
 
         # get product name
@@ -175,7 +170,7 @@ class Controller:
             print("\tProduct with", productName, "is already existing.")
 
     def increaseProductStock(self):
-        print("\tINCREASE PRODUCT INVENTORY STOCK\n")
+        print("\t>>> INCREASE PRODUCT INVENTORY STOCK <<<\n")
 
         productIds = []
 
@@ -205,7 +200,7 @@ class Controller:
             print("\tThere are currently no stock records to increase")
 
     def markOrderAsPaid(self):
-        print("\tMARK SALES ORDER AS PAID\n")
+        print("\t>>> MARK SALES ORDER AS PAID <<<\n")
         # display sales journal by date completed that are unpaid
         # select a sales journal
         # ask amount to be given
@@ -289,7 +284,7 @@ class Controller:
             print("\tThere currently no sales journal record")
 
     def markOrderAsDelivered(self):
-        print("\tMARK ORDER AS DELIVERED\n")
+        print("\t>>> MARK ORDER AS DELIVERED <<<\n")
 
         # display shipping log
         # select as shipping id
@@ -324,7 +319,7 @@ class Controller:
 
     # display menu
     def displayCustomers(self):
-        print("\tDISPLAY CUSTOMER INFORMATION SORT BY CUSTOMER NAME\n")
+        print("\t>>> DISPLAY CUSTOMER INFORMATION SORT BY CUSTOMER NAME <<<\n")
 
         if self.data.customerInformation.head != None:
 
@@ -342,7 +337,7 @@ class Controller:
             print("\tThere are currently no recorded customer")
 
     def displaySalesJournals(self):
-        print("\tDISPLAY SALES JOURNALS SORT BY DATE COMPLETED\n")
+        print("\t>>> DISPLAY SALES JOURNALS SORT BY DATE COMPLETED <<<\n")
 
         if self.data.salesJournal.head != None:
 
@@ -360,7 +355,7 @@ class Controller:
             print("\tThere are currently no recorded sales journal")
 
     def displayShippingLog(self):
-        print("\tDISPLAY SHIPPING LOG SORT BY DATE\n")
+        print("\t>>> DISPLAY SHIPPING LOG SORT BY DATE <<<\n")
 
         if self.data.shippingLog.head != None:
 
@@ -391,9 +386,8 @@ class Controller:
             print("\tThere are currently no recorded shipping log")
 
     # main menu
-
     def billCustomer(self):
-        print("\tBILL CUSTOMERS\n")
+        print("\t>>> BILL CUSTOMERS <<<\n")
         # includes re-computing customer credit/amount payable
 
         if self.data.temporaryPendingFile.head != None:
@@ -487,7 +481,7 @@ class Controller:
             print("\tThere are currently no sales orders to be billed")
 
     def shipOrders(self):
-        print("\tSHIP ORDERS\n")
+        print("\t>>> SHIP ORDERS <<<\n")
 
         toShip = self.data.openOrderFile.dequeue()
         if toShip != None:
@@ -531,7 +525,7 @@ class Controller:
             print("\n\tThere are currently no orders for shipping")
 
     def processBackOrders(self):
-        print("\tPROCESSING BACK ORDERS\n")
+        print("\t>>> PROCESSING BACK ORDERS <<<\n")
         # already a sales order
         salesBackOrder = self.data.backOrderFile.dequeue()
 
@@ -571,7 +565,7 @@ class Controller:
             print("\tThere are currently no back orders in queue")
 
     def createSalesOrder(self):
-        print("\tPROCESSING CUSTOMER ORDER TO SALES ORDERS\n")
+        print("\t>>> PROCESSING CUSTOMER ORDER TO SALES <<<\n")
         toProcess = self.data.customerOrder.dequeue()
 
         if toProcess:
@@ -626,6 +620,8 @@ class Controller:
             print("\tThere are currently no customer orders in queue")
 
     def takeCustomerOrder(self):
+        print("\t>>> TAKE CUSTOMER ORDER <<<\n")
+
         customerOrder = CustomerOrder()
 
         productIdList = []
@@ -656,6 +652,7 @@ class Controller:
         quantityInput = None
         orderProductIds = []
         orderProductQuantities = []
+        # add product and quantity
         while True:
             productInput = InputHelper.integerInputWithChoices("Select a product Id", productIdList)
             quantityInput = InputHelper.integerInput("Product quantity", 1)
@@ -675,4 +672,6 @@ class Controller:
         # append to records
         customerOrder.setItems(orderProductIds)
         customerOrder.setItemQuantities(orderProductQuantities)
+
+        # enqueue new customer order
         self.data.customerOrder.enqueue(customerOrder)
