@@ -232,7 +232,21 @@ class Controller:
 
             # display
             for shippingDetail in shippingList:
+                # find connected sales order that are not yet recorded in the sales journals
+                salesOrder = self.data.temporaryPendingFile.head
+                while salesOrder != None:
+                    if salesOrder.data.getShippingId() == shippingDetail.data.getShippingId():
+                        break
+                    salesOrder = salesOrder.next
+
+                print("\t\tShipping Log Summary")
                 shippingDetail.data.displaySummary()
+                if salesOrder == None:
+                    # already billed
+                    print("\tSales order of this shipping log is already recorded in the sales journal")
+                else:
+                    print("\t\tSales Order Summary")
+                    salesOrder.data.displaySummary()
                 print()
 
         else:
