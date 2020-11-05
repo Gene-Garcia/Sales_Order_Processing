@@ -16,7 +16,10 @@ Data structures applied:
 
 def main():
     print("\t\t\t\tXYZ Company")
-    controller = Controller()
+    try:
+        controller = Controller()
+    except:
+        print("\tAn error has been encountered.")
 
 if __name__ == "__main__":
     main()

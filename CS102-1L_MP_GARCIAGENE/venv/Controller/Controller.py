@@ -56,7 +56,7 @@ class Controller:
             print("\t3 Process back orders")
             print("\t4 Ship orders")
             print("\t5 Bill customer")
-            print("\t6 Display records")
+            print("\t6 Display Records Menu")
             print("\t7 Other Menu")
             print("\t0 Terminate program")
             menuSelection = InputHelper.integerInputWithChoices("> Select from menu", [1, 2, 3, 4, 5, 6, 7, 0])
@@ -92,16 +92,16 @@ class Controller:
         # check if stock inventory is enough for the order
         if salesOrder.getQuantity() <= productModel.getStock():
 
-            # change credit limit policy
-            # as long as it is not yet maxed out allow it to process
-            a = 10
+            # as long as the credit limit of the customer is not maxed out,
+            # not including the current sales order sales price
+            # can still be processed
 
             # check customer's credit limit and current payable
             totalSales = salesOrder.getQuantity() * productModel.getPrice()
-            if (customerModel.getAmountPayable() + totalSales) >= customerModel.getCreditLimit():
+            if customerModel.getAmountPayable() >= customerModel.getCreditLimit():
                 # file in back order file
                 self.data.backOrderFile.enqueue(salesOrder)
-                print("\n\tSales Order Queued in Back Order File because customer will max out their credit limit worh PHP",
+                print("\n\tSales Order Queued in Back Order File because", customerModel.getName(), "maxed out their credit limit worh PHP",
                       customerModel.getCreditLimit(), "\n")
 
             else:
@@ -366,7 +366,7 @@ class Controller:
             print("\tThere are currently no recorded sales journal")
 
     def displayShippingLog(self):
-        print("\t>>> DISPLAY SHIPPING LOGS SORT BY DATE <<<\n")
+        print("\t>>> DISPLAY SHIPPING LOGS SORT BY DATE SHIPPED<<<\n")
 
         if self.data.shippingLog.head != None:
 
@@ -531,7 +531,6 @@ class Controller:
             self.data.salesOrderPendingFile.enqueue(salesOrderToShip)
             self.data.temporaryPendingFile.insertNode(salesOrderToShip)
 
-            # add date computation
             print("\n\tSales order filed for shipment and will be delivered to the customer after exactly 7 days")
 
         else:
