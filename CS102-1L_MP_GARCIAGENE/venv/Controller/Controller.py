@@ -298,40 +298,28 @@ class Controller:
         # dequeue from pending file
         # find its shipping idd
 
-        # display shipping log
-        # select as shipping id
-        # set as delivered
+        # dequeue a sales order, and mark its shipping details as delivered
+        # a sales order in the SO pending file is already recorded in the Sales Journal, during bill customer function
+        salesOrder = self.data.salesOrderPendingFile.dequeue()
 
-        # not yet delivered
-        shippingIds = []
+        if salesOrder != None:
 
-        # travers the shipping log and get the shipping ids
-        # that are also not delivered
-        shippingDetail = self.data.shippingLog.head
-        while shippingDetail != None:
-            if shippingDetail.data.getDateDelivered() == None:
-                shippingIds.append(shippingDetail.data.getShippingId())
-                print("\t\t\tSHIPPING LOG DETAILS")
-                shippingDetail.data.displaySummary()
-                print()
-
-            shippingDetail = shippingDetail.next
-
-        if len(shippingIds) > 0:
-            selectedShippingId = InputHelper.integerInputWithChoices("Select a shipping Id to be marked as delivered", shippingIds)
-
-            # find shipping detail model
-            shippingDetail = self.data.shippingLogHashTable.findData(selectedShippingId)
+            # find the shipping detail
+            shippingDetail = self.data.shippingLogHashTable.findData(salesOrder.data.getShippingId())
 
             if shippingDetail != None:
-                # set as delivered
                 shippingDetail.setDateDelivered(date.today())
-                # it also automatically updates the shipping detail model in the hash table
 
-                print(f"\n\tShipping log record with ID #{selectedShippingId} is set as delivered as of {shippingDetail.getDateDelivered()}")
+                print("\t\t\tSALES ORDER SUMMARY")
+                salesOrder.data.displaySummary()
+
+                print("\n\t\t\tSHIPPING LOG SUMMARY")
+                shippingDetail.displaySummary()
+
+                print(f"\n\tShipping log record with ID #{shippingDetail.getShippingId()} is set as delivered as of {shippingDetail.getDateDelivered()}")
 
         else:
-            print("\tAll shipping logs are delivered")
+            print("\tThere are no currently undelivered sales orders")
 
     # display menu
     def displayCustomers(self):
@@ -347,6 +335,7 @@ class Controller:
             for customer in customerList:
                 print("\t\t\tCUSTOMER INFORMATION RECORDS")
                 customer.data.displaySummary()
+                print("\t----------------------------------------")
                 print()
 
         else:
@@ -402,6 +391,7 @@ class Controller:
                 else:
                     print("\t\t\tSALES ORDER SUMMARY")
                     salesOrder.data.displaySummary()
+                print("\t-------------------------------------")
                 print()
 
         else:
@@ -410,6 +400,7 @@ class Controller:
     # main menu
     def terminateProgram(self):
         self.data.saveRecords()
+        print("Terminating the program...")
 
     def billCustomer(self):
         print("\t>>> BILL CUSTOMERS <<<\n")
@@ -448,8 +439,9 @@ class Controller:
                                              productModel.getPrice(), customerModel.getName())
 
                     # shipping details
-                    print("\t\t\tSHIPPING LOG SUMMARY")
+                    print("\n\t\t\tSHIPPING LOG SUMMARY")
                     log.displaySummary()
+                    print("\t------------------------------------------")
                 print()
 
             # select sales order
