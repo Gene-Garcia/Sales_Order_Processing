@@ -1,5 +1,5 @@
 from Controller.Controller import Controller
-
+from Helpers.PrimeHelper import PrimeHelper
 """
 GARCIA, Gene Joseph V
 CS102-1L - Final Machine Problem
@@ -224,6 +224,7 @@ list = SinglyLinkedList()
 def main():
     print("\t\t\t\tXYZ Company")
     controller = Controller()
+    #print(PrimeHelper.findNearestPrime(10+30))
 
 if __name__ == "__main__":
     main()

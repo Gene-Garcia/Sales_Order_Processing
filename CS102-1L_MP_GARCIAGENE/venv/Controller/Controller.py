@@ -1,5 +1,4 @@
 from Helpers.InputHelper import InputHelper
-from Helpers.DataHelper import DataHelper
 from Helpers.ASCIIHelper import ASCIIHelper
 
 from DataStructures.QuickSort import QuickSort
@@ -11,14 +10,16 @@ from Models.ShipmentDetails import ShipmentDetails
 from Models.JournalEntry import JournalEntry
 from Models.Product import Product
 
+from Models.DataRepository import DataRepository
+
 from datetime import date
 
 class Controller:
 
     def __init__(self):
-        data = DataHelper()
-        data.populate()
+        data = DataRepository()
         self.data = data
+        self.data.populate()
 
         # menus for lambda
         self.mainMenus = {
@@ -90,6 +91,10 @@ class Controller:
     def recordSalesOrder(self, salesOrder, customerModel, productModel):
         # check if stock inventory is enough for the order
         if salesOrder.getQuantity() <= productModel.getStock():
+
+            # change credit limit policy
+            # as long as it is not yet maxed out allow it to process
+            a = 10
 
             # check customer's credit limit and current payable
             totalSales = salesOrder.getQuantity() * productModel.getPrice()
@@ -290,6 +295,9 @@ class Controller:
     def markOrderAsDelivered(self):
         print("\t>>> MARK ORDER AS DELIVERED <<<\n")
 
+        # dequeue from pending file
+        # find its shipping idd
+
         # display shipping log
         # select as shipping id
         # set as delivered
@@ -401,8 +409,7 @@ class Controller:
 
     # main menu
     def terminateProgram(self):
-        # save to text file
-        pass
+        self.data.saveRecords()
 
     def billCustomer(self):
         print("\t>>> BILL CUSTOMERS <<<\n")
